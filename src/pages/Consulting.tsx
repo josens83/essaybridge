@@ -19,19 +19,19 @@ const Consulting = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">입시 컨설팅</h1>
-          <p className="text-xl text-gray-600">전문 컨설턴트와 함께 합격 전략을 세워보세요</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">입시 컨설팅</h1>
+          <p className="text-xl text-gray-600 dark:text-gray-400">전문 컨설턴트와 함께 합격 전략을 세워보세요</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Consultant List */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow mb-6 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">컨설팅 유형 선택</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow mb-6 p-6 transition-colors">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">컨설팅 유형 선택</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
                   { value: 'essay_review', label: '논술 전략 컨설팅', price: '50,000원' },
@@ -44,23 +44,23 @@ const Consulting = () => {
                     onClick={() => setConsultingType(type.value)}
                     className={`p-4 border-2 rounded-lg text-left transition-colors ${
                       consultingType === type.value
-                        ? 'border-primary-600 bg-primary-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-primary-600 dark:border-primary-500 bg-primary-50 dark:bg-primary-900/30'
+                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                     }`}
                   >
-                    <div className="font-semibold text-gray-900 mb-1">{type.label}</div>
-                    <div className="text-sm text-gray-600">{type.price} / 1시간</div>
+                    <div className="font-semibold text-gray-900 dark:text-white mb-1">{type.label}</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{type.price} / 1시간</div>
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow">
-              <div className="p-6 border-b border-gray-200">
-                <h2 className="text-xl font-semibold text-gray-900">컨설턴트 선택</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow transition-colors">
+              <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">컨설턴트 선택</h2>
               </div>
 
-              <div className="divide-y divide-gray-200">
+              <div className="divide-y divide-gray-200 dark:divide-gray-700">
                 {sampleConsultants.map((consultant) => (
                   <div key={consultant.id} className="p-6">
                     <div className="flex items-start space-x-4">
@@ -71,17 +71,17 @@ const Consulting = () => {
                       />
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
-                          <h3 className="text-lg font-semibold text-gray-900">{consultant.name}</h3>
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{consultant.name}</h3>
                           <div className="flex items-center">
-                            <FiStar className="w-5 h-5 text-yellow-500 mr-1" />
-                            <span className="font-semibold text-gray-900">{consultant.rating}</span>
-                            <span className="text-sm text-gray-600 ml-1">
+                            <FiStar className="w-5 h-5 text-yellow-500 dark:text-yellow-400 mr-1" />
+                            <span className="font-semibold text-gray-900 dark:text-gray-200">{consultant.rating}</span>
+                            <span className="text-sm text-gray-600 dark:text-gray-400 ml-1">
                               ({consultant.reviewCount})
                             </span>
                           </div>
                         </div>
 
-                        <div className="flex items-center text-sm text-gray-600 mb-3">
+                        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-3">
                           <FiAward className="w-4 h-4 mr-1" />
                           <span>{consultant.experience}년 경력</span>
                         </div>
@@ -90,7 +90,7 @@ const Consulting = () => {
                           {consultant.specialties.map((specialty, index) => (
                             <span
                               key={index}
-                              className="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full"
+                              className="px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 text-sm rounded-full"
                             >
                               {specialty}
                             </span>
@@ -115,37 +115,37 @@ const Consulting = () => {
 
           {/* Booking Form */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow p-6 sticky top-24">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">예약 정보</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 sticky top-24 transition-colors">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">예약 정보</h2>
 
               {selectedConsultant ? (
                 <form className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       상담 날짜
                     </label>
                     <div className="relative">
-                      <FiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <FiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5" />
                       <input
                         type="date"
                         value={selectedDate}
                         onChange={(e) => setSelectedDate(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
                         min={new Date().toISOString().split('T')[0]}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       상담 시간
                     </label>
                     <div className="relative">
-                      <FiClock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <FiClock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5" />
                       <select
                         value={selectedTime}
                         onChange={(e) => setSelectedTime(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
                       >
                         <option value="">시간 선택</option>
                         <option value="09:00">09:00</option>
@@ -160,24 +160,24 @@ const Consulting = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       상담 내용 (선택)
                     </label>
                     <textarea
                       rows={4}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
                       placeholder="궁금한 내용이나 준비하고 싶은 주제를 자유롭게 작성해주세요."
                     />
                   </div>
 
-                  <div className="border-t border-gray-200 pt-4">
+                  <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
                     <div className="flex justify-between text-sm mb-2">
-                      <span className="text-gray-600">상담료</span>
-                      <span className="font-medium">50,000원</span>
+                      <span className="text-gray-600 dark:text-gray-400">상담료</span>
+                      <span className="font-medium text-gray-900 dark:text-gray-200">50,000원</span>
                     </div>
                     <div className="flex justify-between text-lg font-semibold">
-                      <span>총 금액</span>
-                      <span className="text-primary-600">50,000원</span>
+                      <span className="text-gray-900 dark:text-white">총 금액</span>
+                      <span className="text-primary-600 dark:text-primary-400">50,000원</span>
                     </div>
                   </div>
 
@@ -190,13 +190,13 @@ const Consulting = () => {
                     예약하기
                   </button>
 
-                  <p className="text-xs text-center text-gray-500">
+                  <p className="text-xs text-center text-gray-500 dark:text-gray-400">
                     예약 후 24시간 전까지 무료 취소 가능합니다.
                   </p>
                 </form>
               ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <FiCalendar className="w-12 h-12 mx-auto mb-3 text-gray-400" />
+                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                  <FiCalendar className="w-12 h-12 mx-auto mb-3 text-gray-400 dark:text-gray-500" />
                   <p>컨설턴트를 먼저 선택해주세요</p>
                 </div>
               )}
@@ -205,33 +205,33 @@ const Consulting = () => {
         </div>
 
         {/* Benefits Section */}
-        <div className="mt-12 bg-white rounded-lg shadow p-8">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-6">1:1 컨설팅의 장점</h2>
+        <div className="mt-12 bg-white dark:bg-gray-800 rounded-lg shadow p-8 transition-colors">
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">1:1 컨설팅의 장점</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
-              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FiStar className="w-8 h-8 text-primary-600" />
+              <div className="bg-primary-100 dark:bg-primary-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FiStar className="w-8 h-8 text-primary-600 dark:text-primary-400" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">맞춤형 전략</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">맞춤형 전략</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 개인의 강점과 약점을 분석하여 최적의 입시 전략을 제시합니다.
               </p>
             </div>
             <div className="text-center">
-              <div className="bg-secondary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FiAward className="w-8 h-8 text-secondary-600" />
+              <div className="bg-secondary-100 dark:bg-secondary-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FiAward className="w-8 h-8 text-secondary-600 dark:text-secondary-400" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">전문가 노하우</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">전문가 노하우</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 수년간의 입시 경험을 바탕으로 실질적인 조언을 받을 수 있습니다.
               </p>
             </div>
             <div className="text-center">
-              <div className="bg-primary-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FiClock className="w-8 h-8 text-primary-600" />
+              <div className="bg-primary-100 dark:bg-primary-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FiClock className="w-8 h-8 text-primary-600 dark:text-primary-400" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">시간 절약</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">시간 절약</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 효율적인 학습 계획으로 시간을 절약하고 목표에 집중할 수 있습니다.
               </p>
             </div>
@@ -241,10 +241,10 @@ const Consulting = () => {
 
       {/* Booking Modal */}
       {showBookingModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-8 max-w-sm w-full text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-            <p className="text-gray-900 font-medium">예약 처리 중...</p>
+        <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-8 max-w-sm w-full text-center transition-colors">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 dark:border-primary-400 mx-auto mb-4"></div>
+            <p className="text-gray-900 dark:text-white font-medium">예약 처리 중...</p>
           </div>
         </div>
       )}
