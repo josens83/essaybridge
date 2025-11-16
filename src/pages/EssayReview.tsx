@@ -14,9 +14,9 @@ const EssayReview = () => {
 
   if (!essay) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center transition-colors">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">논술을 찾을 수 없습니다</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">논술을 찾을 수 없습니다</h2>
           <button onClick={() => navigate('/essays')} className="btn-primary mt-4">
             목록으로 돌아가기
           </button>
@@ -52,13 +52,13 @@ const EssayReview = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-6">
           <button
             onClick={() => navigate('/essays')}
-            className="flex items-center text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-4 transition-colors"
           >
             <FiArrowLeft className="w-5 h-5 mr-2" />
             목록으로
@@ -66,8 +66,8 @@ const EssayReview = () => {
 
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{essay.title}</h1>
-              <div className="flex items-center text-sm text-gray-600 space-x-4">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{essay.title}</h1>
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 space-x-4">
                 <span>{essay.university}</span>
                 <span>·</span>
                 <span>{essay.department}</span>
@@ -90,36 +90,36 @@ const EssayReview = () => {
             {/* Essay Content with Highlights */}
             <div className="lg:col-span-2 space-y-6">
               {/* Overall Score */}
-              <div className="bg-white rounded-lg shadow p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-colors">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-gray-900">종합 평가</h2>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">종합 평가</h2>
                   <div className="flex items-center">
-                    <span className="text-3xl font-bold text-primary-600 mr-2">{review.score}</span>
-                    <span className="text-gray-600">/ 100</span>
+                    <span className="text-3xl font-bold text-primary-600 dark:text-primary-400 mr-2">{review.score}</span>
+                    <span className="text-gray-600 dark:text-gray-400">/ 100</span>
                   </div>
                 </div>
 
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
                     {review.overallFeedback}
                   </p>
                 </div>
               </div>
 
               {/* Essay Text with Highlights */}
-              <div className="bg-white rounded-lg shadow p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-colors">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-gray-900">첨삭된 논술</h2>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">첨삭된 논술</h2>
                   <button
                     onClick={() => setShowAllComments(!showAllComments)}
-                    className="text-sm text-primary-600 hover:text-primary-700"
+                    className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300"
                   >
                     {showAllComments ? '하이라이트 숨기기' : '하이라이트 보기'}
                   </button>
                 </div>
 
                 <div
-                  className="prose max-w-none leading-relaxed text-gray-800"
+                  className="prose max-w-none leading-relaxed text-gray-800 dark:text-gray-200"
                   dangerouslySetInnerHTML={{ __html: highlightText(essay.content) }}
                 />
               </div>
@@ -127,14 +127,14 @@ const EssayReview = () => {
 
             {/* Comments Sidebar */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-lg shadow p-6 sticky top-24">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 sticky top-24 transition-colors">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
                   첨삭 코멘트 ({review.comments.length})
                 </h2>
 
                 {/* Comment Type Legend */}
-                <div className="mb-4 pb-4 border-b border-gray-200">
-                  <p className="text-sm text-gray-600 mb-2">코멘트 유형</p>
+                <div className="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">코멘트 유형</p>
                   <div className="flex flex-wrap gap-2">
                     {Object.entries(commentTypes).map(([key, value]) => (
                       <span
@@ -170,17 +170,17 @@ const EssayReview = () => {
                 </div>
 
                 {/* Expert Info */}
-                <div className="mt-6 pt-6 border-t border-gray-200">
-                  <p className="text-sm text-gray-600 mb-2">첨삭 전문가</p>
+                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">첨삭 전문가</p>
                   <div className="flex items-center">
-                    <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-primary-600 font-semibold">
+                    <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-primary-600 dark:text-primary-400 font-semibold">
                         {review.expertName[0]}
                       </span>
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">{review.expertName}</p>
-                      <p className="text-xs text-gray-600">논술 전문가</p>
+                      <p className="font-medium text-gray-900 dark:text-white">{review.expertName}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">논술 전문가</p>
                     </div>
                   </div>
                 </div>
@@ -188,35 +188,35 @@ const EssayReview = () => {
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow p-8">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8 transition-colors">
             <div className="text-center">
               {essay.status === 'in_review' ? (
                 <>
-                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <FiCheckCircle className="w-8 h-8 text-blue-600" />
+                  <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <FiCheckCircle className="w-8 h-8 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">첨삭 진행 중</h2>
-                  <p className="text-gray-600 mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">첨삭 진행 중</h2>
+                  <p className="text-gray-600 dark:text-gray-400 mb-6">
                     전문가가 논술을 첨삭하고 있습니다. 곧 결과를 확인하실 수 있습니다.
                   </p>
-                  <div className="bg-blue-50 rounded-lg p-4 max-w-md mx-auto">
-                    <p className="text-sm text-blue-800">예상 완료 시간: 24시간 이내</p>
+                  <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-4 max-w-md mx-auto">
+                    <p className="text-sm text-blue-800 dark:text-blue-200">예상 완료 시간: 24시간 이내</p>
                   </div>
                 </>
               ) : essay.status === 'submitted' ? (
                 <>
-                  <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <FiAlertCircle className="w-8 h-8 text-yellow-600" />
+                  <div className="w-16 h-16 bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <FiAlertCircle className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">첨삭 대기 중</h2>
-                  <p className="text-gray-600 mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">첨삭 대기 중</h2>
+                  <p className="text-gray-600 dark:text-gray-400 mb-6">
                     곧 전문가가 배정되어 첨삭을 시작합니다.
                   </p>
                 </>
               ) : (
                 <>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">작성 중인 논술</h2>
-                  <p className="text-gray-600 mb-6">
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">작성 중인 논술</h2>
+                  <p className="text-gray-600 dark:text-gray-400 mb-6">
                     아직 제출하지 않은 논술입니다. 작성을 완료하고 첨삭을 신청해주세요.
                   </p>
                   <button
@@ -230,14 +230,14 @@ const EssayReview = () => {
             </div>
 
             {/* Essay Preview */}
-            <div className="mt-8 pt-8 border-t border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">논술 내용 미리보기</h3>
-              <div className="bg-gray-50 rounded-lg p-6">
-                <p className="text-gray-700 leading-relaxed whitespace-pre-line line-clamp-10">
+            <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">논술 내용 미리보기</h3>
+              <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line line-clamp-10">
                   {essay.content}
                 </p>
                 {essay.content.length > 500 && (
-                  <button className="text-primary-600 hover:text-primary-700 text-sm mt-2">
+                  <button className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 text-sm mt-2">
                     더 보기
                   </button>
                 )}
