@@ -54,23 +54,23 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8 transition-colors">
       <div className="max-w-md mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-8">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 transition-colors">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">회원가입</h2>
-            <p className="mt-2 text-gray-600">논술 합격의 첫걸음을 시작하세요</p>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white">회원가입</h2>
+            <p className="mt-2 text-gray-600 dark:text-gray-400">논술 합격의 첫걸음을 시작하세요</p>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+            <div className="bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg mb-4">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="role" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 계정 유형
               </label>
               <select
@@ -87,7 +87,7 @@ const Register = () => {
             </div>
 
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 이름
               </label>
               <input
@@ -103,7 +103,7 @@ const Register = () => {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 이메일
               </label>
               <input
@@ -119,7 +119,7 @@ const Register = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 비밀번호
               </label>
               <input
@@ -138,7 +138,7 @@ const Register = () => {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
               >
                 비밀번호 확인
               </label>
@@ -162,10 +162,10 @@ const Register = () => {
                   type="checkbox"
                   checked={formData.agreeToTerms}
                   onChange={handleChange}
-                  className="h-4 w-4 mt-1 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  className="h-4 w-4 mt-1 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded"
                 />
-                <label htmlFor="agreeToTerms" className="ml-2 block text-sm text-gray-700">
-                  <Link to="/terms" className="text-primary-600 hover:text-primary-700">
+                <label htmlFor="agreeToTerms" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                  <Link to="/terms" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">
                     이용약관
                   </Link>
                   에 동의합니다 (필수)
@@ -179,10 +179,10 @@ const Register = () => {
                   type="checkbox"
                   checked={formData.agreeToPrivacy}
                   onChange={handleChange}
-                  className="h-4 w-4 mt-1 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  className="h-4 w-4 mt-1 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded"
                 />
-                <label htmlFor="agreeToPrivacy" className="ml-2 block text-sm text-gray-700">
-                  <Link to="/privacy" className="text-primary-600 hover:text-primary-700">
+                <label htmlFor="agreeToPrivacy" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                  <Link to="/privacy" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300">
                     개인정보처리방침
                   </Link>
                   에 동의합니다 (필수)
@@ -200,9 +200,9 @@ const Register = () => {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               이미 계정이 있으신가요?{' '}
-              <Link to="/login" className="text-primary-600 hover:text-primary-700 font-medium">
+              <Link to="/login" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium">
                 로그인
               </Link>
             </p>
