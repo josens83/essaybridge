@@ -23,9 +23,9 @@ const CourseDetail = () => {
 
   if (!course) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center transition-colors">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">강의를 찾을 수 없습니다</h2>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">강의를 찾을 수 없습니다</h2>
           <button onClick={() => navigate('/courses')} className="btn-primary mt-4">
             목록으로 돌아가기
           </button>
@@ -50,9 +50,9 @@ const CourseDetail = () => {
   const progress = 30; // Mock progress
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-primary-700 to-primary-900 text-white">
+      <div className="bg-gradient-to-br from-primary-700 to-primary-900 dark:from-primary-800 dark:to-primary-950 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <button
             onClick={() => navigate('/courses')}
@@ -121,24 +121,24 @@ const CourseDetail = () => {
             </div>
 
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-lg shadow-lg p-6 text-gray-900">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-gray-900 dark:text-gray-100 transition-colors">
                 <div className="mb-6">
-                  <div className="text-3xl font-bold text-primary-600 mb-2">
+                  <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-2">
                     {course.price.toLocaleString()}원
                   </div>
-                  <p className="text-sm text-gray-600">또는 구독 플랜으로 무제한 수강</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">또는 구독 플랜으로 무제한 수강</p>
                 </div>
 
                 {isEnrolled ? (
                   <>
                     <div className="mb-4">
                       <div className="flex justify-between text-sm mb-2">
-                        <span className="text-gray-600">진도율</span>
-                        <span className="font-semibold text-primary-600">{progress}%</span>
+                        <span className="text-gray-600 dark:text-gray-400">진도율</span>
+                        <span className="font-semibold text-primary-600 dark:text-primary-400">{progress}%</span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                         <div
-                          className="bg-primary-600 h-2 rounded-full transition-all"
+                          className="bg-primary-600 dark:bg-primary-500 h-2 rounded-full transition-all"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
@@ -159,9 +159,9 @@ const CourseDetail = () => {
                   </>
                 )}
 
-                <div className="mt-6 pt-6 border-t border-gray-200">
-                  <p className="text-sm font-semibold text-gray-900 mb-3">이 강의에 포함된 내용</p>
-                  <ul className="space-y-2 text-sm text-gray-700">
+                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white mb-3">이 강의에 포함된 내용</p>
+                  <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                     <li className="flex items-start">
                       <FiCheck className="w-5 h-5 text-green-600 mr-2 flex-shrink-0" />
                       <span>총 {course.lessons.length}개 강의</span>
@@ -192,8 +192,8 @@ const CourseDetail = () => {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
             {/* What You'll Learn */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">학습 내용</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-colors">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">학습 내용</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
                   '논술의 기본 구조와 전개 방법',
@@ -204,17 +204,17 @@ const CourseDetail = () => {
                   '첨삭을 통한 실력 향상',
                 ].map((item, index) => (
                   <div key={index} className="flex items-start">
-                    <FiCheck className="w-5 h-5 text-secondary-600 mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">{item}</span>
+                    <FiCheck className="w-5 h-5 text-secondary-600 dark:text-secondary-400 mr-2 flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-700 dark:text-gray-300">{item}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Course Description */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">강의 소개</h2>
-              <div className="prose max-w-none text-gray-700">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-colors">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">강의 소개</h2>
+              <div className="prose max-w-none text-gray-700 dark:text-gray-300">
                 <p className="mb-4">
                   본 강의는 {course.universities.join(', ')} 논술 전형을 준비하는 수험생을 위한
                   실전 대비 강의입니다. 최근 3개년 기출문제를 철저히 분석하여 출제 경향을
@@ -232,20 +232,20 @@ const CourseDetail = () => {
             </div>
 
             {/* Instructor */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">강사 소개</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-colors">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">강사 소개</h2>
               <div className="flex items-start">
-                <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                  <span className="text-3xl text-primary-600 font-semibold">
+                <div className="w-20 h-20 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                  <span className="text-3xl text-primary-600 dark:text-primary-400 font-semibold">
                     {course.instructor[0]}
                   </span>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                     {course.instructor}
                   </h3>
-                  <p className="text-gray-600 mb-3">논술 전문 강사 · 입시 컨설턴트</p>
-                  <p className="text-gray-700 leading-relaxed">
+                  <p className="text-gray-600 dark:text-gray-400 mb-3">논술 전문 강사 · 입시 컨설턴트</p>
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
                     서울대 인문계열 출신으로 10년 이상 논술 지도 경력을 보유하고 있습니다. 매년
                     100명 이상의 학생을 SKY 대학에 합격시킨 검증된 강의력으로, 체계적이고
                     실전적인 논술 학습을 제공합니다.
@@ -255,13 +255,13 @@ const CourseDetail = () => {
             </div>
 
             {/* Reviews */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-colors">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                 수강생 리뷰 ({course.reviewCount})
               </h2>
 
               <div className="flex items-center mb-6">
-                <div className="text-5xl font-bold text-gray-900 mr-4">{course.rating}</div>
+                <div className="text-5xl font-bold text-gray-900 dark:text-white mr-4">{course.rating}</div>
                 <div>
                   <div className="flex items-center mb-1">
                     {[...Array(5)].map((_, i) => (
@@ -270,22 +270,22 @@ const CourseDetail = () => {
                         className={`w-5 h-5 ${
                           i < Math.floor(course.rating)
                             ? 'text-yellow-400 fill-current'
-                            : 'text-gray-300'
+                            : 'text-gray-300 dark:text-gray-600'
                         }`}
                       />
                     ))}
                   </div>
-                  <p className="text-sm text-gray-600">평균 평점</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">평균 평점</p>
                 </div>
               </div>
 
               <div className="space-y-6">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="border-t border-gray-200 pt-6 first:border-0 first:pt-0">
+                  <div key={i} className="border-t border-gray-200 dark:border-gray-700 pt-6 first:border-0 first:pt-0">
                     <div className="flex items-center mb-2">
-                      <div className="w-10 h-10 bg-gray-200 rounded-full mr-3" />
+                      <div className="w-10 h-10 bg-gray-200 dark:bg-gray-700 rounded-full mr-3" />
                       <div>
-                        <p className="font-semibold text-gray-900">수강생{i}</p>
+                        <p className="font-semibold text-gray-900 dark:text-white">수강생{i}</p>
                         <div className="flex items-center">
                           {[...Array(5)].map((_, j) => (
                             <FiStar
@@ -296,7 +296,7 @@ const CourseDetail = () => {
                         </div>
                       </div>
                     </div>
-                    <p className="text-gray-700">
+                    <p className="text-gray-700 dark:text-gray-300">
                       강의 내용이 체계적이고 이해하기 쉬워요. 실전 문제 풀이가 특히
                       도움이 되었습니다!
                     </p>
@@ -308,10 +308,10 @@ const CourseDetail = () => {
 
           {/* Curriculum Sidebar */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow sticky top-24">
-              <div className="p-6 border-b border-gray-200">
-                <h2 className="text-xl font-semibold text-gray-900">커리큘럼</h2>
-                <p className="text-sm text-gray-600 mt-1">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow sticky top-24 transition-colors">
+              <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">커리큘럼</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                   {course.lessons.length}개 강의 · {Math.floor(course.duration / 60)}시간
                 </p>
               </div>
@@ -326,28 +326,28 @@ const CourseDetail = () => {
                       key={lesson.id}
                       onClick={() => !isLocked && setSelectedLesson(lesson.id)}
                       disabled={isLocked}
-                      className={`w-full p-4 text-left border-b border-gray-200 hover:bg-gray-50 transition-colors disabled:opacity-60 disabled:cursor-not-allowed ${
-                        selectedLesson === lesson.id ? 'bg-primary-50' : ''
+                      className={`w-full p-4 text-left border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed ${
+                        selectedLesson === lesson.id ? 'bg-primary-50 dark:bg-primary-900/30' : ''
                       }`}
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center mb-1">
                             {isCompleted ? (
-                              <FiCheck className="w-5 h-5 text-green-600 mr-2" />
+                              <FiCheck className="w-5 h-5 text-green-600 dark:text-green-400 mr-2" />
                             ) : isLocked ? (
-                              <FiLock className="w-5 h-5 text-gray-400 mr-2" />
+                              <FiLock className="w-5 h-5 text-gray-400 dark:text-gray-500 mr-2" />
                             ) : (
-                              <FiPlay className="w-5 h-5 text-primary-600 mr-2" />
+                              <FiPlay className="w-5 h-5 text-primary-600 dark:text-primary-400 mr-2" />
                             )}
-                            <span className="text-sm font-medium text-gray-900">
+                            <span className="text-sm font-medium text-gray-900 dark:text-white">
                               {index + 1}. {lesson.title}
                             </span>
                           </div>
-                          <p className="text-xs text-gray-600 ml-7 mb-2">
+                          <p className="text-xs text-gray-600 dark:text-gray-400 ml-7 mb-2">
                             {lesson.description}
                           </p>
-                          <div className="flex items-center text-xs text-gray-500 ml-7">
+                          <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 ml-7">
                             <FiClock className="w-3 h-3 mr-1" />
                             <span>{lesson.duration}분</span>
                           </div>
