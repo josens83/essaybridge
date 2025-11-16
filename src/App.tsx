@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import Layout from './components/layout/Layout';
 
 // Pages
@@ -19,6 +20,9 @@ import Community from './pages/Community';
 import PostDetail from './pages/PostDetail';
 import Consulting from './pages/Consulting';
 import Profile from './pages/Profile';
+import Search from './pages/Search';
+import TutorDashboard from './pages/TutorDashboard';
+import FAQ from './pages/FAQ';
 import NotFound from './pages/NotFound';
 
 // Protected Route Component
@@ -44,6 +48,7 @@ const AppRoutes = () => {
         <Route path="/courses/:id" element={<CourseDetail />} />
         <Route path="/community" element={<Community />} />
         <Route path="/community/:id" element={<PostDetail />} />
+        <Route path="/faq" element={<FAQ />} />
 
         {/* Protected Routes */}
         <Route
@@ -110,6 +115,22 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/search"
+          element={
+            <ProtectedRoute>
+              <Search />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tutor"
+          element={
+            <ProtectedRoute>
+              <TutorDashboard />
+            </ProtectedRoute>
+          }
+        />
 
         {/* 404 Page */}
         <Route path="*" element={<NotFound />} />
@@ -120,13 +141,15 @@ const AppRoutes = () => {
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <ToastProvider>
-          <AppRoutes />
-        </ToastProvider>
-      </AuthProvider>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <AuthProvider>
+          <ToastProvider>
+            <AppRoutes />
+          </ToastProvider>
+        </AuthProvider>
+      </Router>
+    </ErrorBoundary>
   );
 }
 

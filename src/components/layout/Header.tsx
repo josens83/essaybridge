@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { FiMenu, FiX, FiBell, FiUser, FiSettings, FiLogOut, FiBook } from 'react-icons/fi';
+import { FiMenu, FiX, FiBell, FiUser, FiSettings, FiLogOut, FiBook, FiSearch } from 'react-icons/fi';
 import { useState, useRef, useEffect } from 'react';
 
 const Header = () => {
@@ -88,6 +88,14 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
               <>
+                {/* Search */}
+                <Link
+                  to="/search"
+                  className="p-2 text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-100"
+                >
+                  <FiSearch className="w-5 h-5" />
+                </Link>
+
                 {/* Notifications */}
                 <div className="relative" ref={notificationRef}>
                   <button
@@ -284,6 +292,13 @@ const Header = () => {
               {isAuthenticated ? (
                 <>
                   <div className="border-t border-gray-200 my-2"></div>
+                  <Link
+                    to="/search"
+                    className="text-gray-700 hover:text-primary-600 transition-colors py-2"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    검색
+                  </Link>
                   <Link
                     to="/dashboard"
                     className="text-gray-700 hover:text-primary-600 transition-colors py-2"
