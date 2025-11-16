@@ -23,13 +23,36 @@
 - 모의 면접 진행
 - 학습 멘토링
 
-### 4. **커뮤니티**
+### 4. **학습 분석 및 관리**
+- 성과 분석 대시보드
+- 점수 추이 시각화
+- 항목별 평가 및 개선 포인트
+- 월별 활동 통계
+- 학습 진도 관리
+
+### 5. **커뮤니티**
 - 합격 후기 공유
 - Q&A 게시판
 - 대학별 게시판
 - 익명 게시 옵션
 
-### 5. **유료 서비스 플랜**
+### 6. **검색 기능**
+- 통합 검색 (논술, 강의, 커뮤니티)
+- 카테고리별 필터링
+- 실시간 검색 결과
+
+### 7. **관리 시스템**
+- 학생용 대시보드
+- 튜터용 관리 대시보드
+- 관리자 대시보드 (사용자, 논술, 수익, 리포트 관리)
+
+### 8. **고객 지원**
+- FAQ (자주 묻는 질문)
+- 이용 가이드
+- 공지사항
+- 이용약관 및 개인정보처리방침
+
+### 9. **유료 서비스 플랜**
 
 #### 프리 플랜 (무료)
 - 기본 강의 3개 무료 수강
@@ -53,11 +76,13 @@
 ## 🛠️ 기술 스택
 
 - **Frontend**: React 18 + TypeScript
-- **Styling**: Tailwind CSS
-- **상태관리**: Context API
+- **Styling**: Tailwind CSS v3 (다크 모드 지원)
+- **상태관리**: Context API (Auth, Toast, Theme)
 - **라우팅**: React Router v6
 - **아이콘**: React Icons
 - **빌드 도구**: Vite
+- **타입 체킹**: TypeScript (strict mode)
+- **에러 처리**: Error Boundary
 
 ## 🚀 시작하기
 
@@ -87,11 +112,23 @@ npm run build
 npm run preview
 ```
 
-## 📱 반응형 디자인
+## 📱 사용자 경험 (UX)
 
+### 반응형 디자인
 - 모바일, 태블릿, 데스크톱 완벽 지원
 - Tailwind CSS의 반응형 유틸리티 클래스 활용
 - 모바일 우선 접근 방식
+
+### 다크 모드
+- 시스템 설정 자동 감지
+- 토글 버튼으로 수동 전환
+- localStorage에 설정 저장
+- 모든 페이지 및 컴포넌트 지원
+
+### 에러 처리
+- Error Boundary로 전역 에러 처리
+- 개발 모드에서 상세 에러 정보 표시
+- 사용자 친화적인 에러 페이지
 
 ## 🎨 디자인 시스템
 
@@ -120,24 +157,35 @@ npm run preview
 essaybridge/
 ├── src/
 │   ├── components/
-│   │   ├── layout/         # 레이아웃 컴포넌트
-│   │   ├── common/         # 공통 컴포넌트
+│   │   ├── layout/         # Header, Footer, Layout
+│   │   ├── common/         # ErrorBoundary, Toast 등
 │   │   ├── essay/          # 논술 관련 컴포넌트
 │   │   ├── course/         # 강의 관련 컴포넌트
 │   │   ├── community/      # 커뮤니티 컴포넌트
 │   │   ├── consulting/     # 컨설팅 컴포넌트
 │   │   └── payment/        # 결제 컴포넌트
-│   ├── contexts/           # React Context
-│   ├── pages/              # 페이지 컴포넌트
+│   ├── contexts/           # AuthContext, ToastContext, ThemeContext
+│   ├── pages/              # 30+ 페이지 컴포넌트
+│   │   ├── Home.tsx        # 랜딩 페이지
+│   │   ├── Dashboard.tsx   # 학생 대시보드
+│   │   ├── Analytics.tsx   # 성과 분석
+│   │   ├── TutorDashboard.tsx    # 튜터 관리
+│   │   ├── AdminDashboard.tsx    # 관리자 대시보드
+│   │   ├── Search.tsx      # 통합 검색
+│   │   ├── FAQ.tsx         # 자주 묻는 질문
+│   │   ├── Guide.tsx       # 이용 가이드
+│   │   ├── Terms.tsx       # 이용약관
+│   │   ├── Privacy.tsx     # 개인정보처리방침
+│   │   └── ...             # 기타 페이지들
 │   ├── types/              # TypeScript 타입 정의
 │   ├── data/               # 샘플 데이터
 │   ├── utils/              # 유틸리티 함수
 │   ├── App.tsx             # 메인 앱 컴포넌트
 │   ├── main.tsx            # 진입점
-│   └── index.css           # 글로벌 스타일
+│   └── index.css           # 글로벌 스타일 (다크 모드 포함)
 ├── public/                 # 정적 파일
 ├── index.html              # HTML 템플릿
-├── tailwind.config.js      # Tailwind 설정
+├── tailwind.config.js      # Tailwind 설정 (다크 모드)
 ├── tsconfig.json           # TypeScript 설정
 └── package.json
 ```
@@ -162,16 +210,55 @@ essaybridge/
 - 결제 보안 강화
 - 영수증 발급 시스템
 
+## ✅ 구현 완료 기능
+
+- [x] 반응형 디자인 (모바일/태블릿/데스크톱)
+- [x] 다크 모드 (시스템 감지 + 수동 전환)
+- [x] 사용자 인증 시스템 (로컬 스토리지)
+- [x] 학생 대시보드
+- [x] 튜터 관리 대시보드
+- [x] 관리자 대시보드
+- [x] 성과 분석 대시보드
+- [x] 통합 검색 기능
+- [x] 논술 작성 및 첨삭 UI
+- [x] 강의 목록 및 상세 페이지
+- [x] 입시 컨설팅 예약 시스템
+- [x] 커뮤니티 (게시글, 댓글)
+- [x] 요금제 및 결제 UI
+- [x] FAQ, 이용가이드, 공지사항
+- [x] 이용약관, 개인정보처리방침
+- [x] Error Boundary
+- [x] Toast 알림 시스템
+
 ## 📈 향후 개선 계획
 
-- [ ] 실시간 채팅 기능
-- [ ] 화상 컨설팅 기능
+### Backend 연동
+- [ ] REST API 또는 GraphQL 서버 구축
+- [ ] 데이터베이스 연동 (PostgreSQL/MongoDB)
+- [ ] JWT 토큰 기반 인증
+- [ ] OAuth 2.0 소셜 로그인
+
+### 실시간 기능
+- [ ] 실시간 채팅 기능 (WebSocket)
+- [ ] 화상 컨설팅 기능 (WebRTC)
+- [ ] 실시간 알림
+
+### AI 및 고급 기능
 - [ ] AI 논술 평가 시스템
-- [ ] 모바일 앱 (React Native)
-- [ ] 관리자 대시보드
-- [ ] 결제 시스템 실제 연동
+- [ ] 표절 검사 기능
+- [ ] 맞춤형 학습 추천
+
+### 결제 및 운영
+- [ ] 실제 결제 시스템 연동 (아임포트/토스페이먼츠)
+- [ ] 영수증 및 세금계산서 발급
 - [ ] 이메일 알림 시스템
-- [ ] 통계 및 분석 기능
+- [ ] SMS 알림
+
+### 확장
+- [ ] 모바일 앱 (React Native)
+- [ ] SEO 최적화
+- [ ] 성능 최적화 (코드 스플리팅, 레이지 로딩)
+- [ ] 접근성 (a11y) 개선
 
 ## 📝 라이센스
 

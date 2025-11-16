@@ -7,6 +7,7 @@ import {
   FiTrendingUp,
   FiAward,
   FiClock,
+  FiBarChart2,
 } from 'react-icons/fi';
 import { sampleEssays } from '../data/sampleData';
 
@@ -21,14 +22,14 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             안녕하세요, {user?.name}님! 👋
           </h1>
-          <p className="text-gray-600">오늘도 합격을 향해 한 걸음 더 나아가봅시다.</p>
+          <p className="text-gray-600 dark:text-gray-400">오늘도 합격을 향해 한 걸음 더 나아가봅시다.</p>
         </div>
 
         {/* Stats Grid */}
@@ -36,14 +37,14 @@ const Dashboard = () => {
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (
-              <div key={index} className="bg-white rounded-lg shadow p-6">
+              <div key={index} className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-colors">
                 <div className="flex items-center justify-between mb-4">
                   <div className={`w-12 h-12 rounded-lg ${stat.color} flex items-center justify-center`}>
                     <Icon className="w-6 h-6" />
                   </div>
-                  <span className="text-2xl font-bold text-gray-900">{stat.value}</span>
+                  <span className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</span>
                 </div>
-                <p className="text-gray-600 text-sm">{stat.label}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">{stat.label}</p>
               </div>
             );
           })}
@@ -52,24 +53,24 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Recent Essays */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow">
-              <div className="p-6 border-b border-gray-200">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow transition-colors">
+              <div className="p-6 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-semibold text-gray-900">최근 논술</h2>
-                  <Link to="/essays" className="text-primary-600 hover:text-primary-700 text-sm font-medium">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">최근 논술</h2>
+                  <Link to="/essays" className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 text-sm font-medium">
                     전체보기
                   </Link>
                 </div>
               </div>
-              <div className="divide-y divide-gray-200">
+              <div className="divide-y divide-gray-200 dark:divide-gray-700">
                 {sampleEssays.slice(0, 3).map((essay) => (
                   <Link
                     key={essay.id}
                     to={`/essays/${essay.id}`}
-                    className="block p-6 hover:bg-gray-50 transition-colors"
+                    className="block p-6 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   >
                     <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-semibold text-gray-900">{essay.title}</h3>
+                      <h3 className="font-semibold text-gray-900 dark:text-white">{essay.title}</h3>
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium ${
                           essay.status === 'completed'
@@ -86,10 +87,10 @@ const Dashboard = () => {
                           : '작성 중'}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                       {essay.university} · {essay.department}
                     </p>
-                    <div className="flex items-center text-xs text-gray-500">
+                    <div className="flex items-center text-xs text-gray-500 dark:text-gray-500">
                       <FiClock className="w-4 h-4 mr-1" />
                       <span>{new Date(essay.createdAt).toLocaleDateString()}</span>
                       <span className="mx-2">·</span>
@@ -104,14 +105,21 @@ const Dashboard = () => {
           {/* Quick Actions & Upcoming */}
           <div className="space-y-6">
             {/* Quick Actions */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">빠른 시작</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-colors">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">빠른 시작</h2>
               <div className="space-y-3">
                 <Link
                   to="/essays/new"
                   className="block w-full btn-primary text-center"
                 >
                   새 논술 작성
+                </Link>
+                <Link
+                  to="/analytics"
+                  className="flex items-center justify-center gap-2 w-full btn-outline text-center"
+                >
+                  <FiBarChart2 className="w-4 h-4" />
+                  성과 분석 보기
                 </Link>
                 <Link
                   to="/consulting"
@@ -129,25 +137,25 @@ const Dashboard = () => {
             </div>
 
             {/* Today's Schedule */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">오늘의 일정</h2>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-colors">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">오늘의 일정</h2>
               <div className="space-y-4">
                 <div className="flex items-start space-x-3">
-                  <div className="bg-primary-100 p-2 rounded-lg">
-                    <FiCalendar className="w-5 h-5 text-primary-600" />
+                  <div className="bg-primary-100 dark:bg-primary-900/30 p-2 rounded-lg">
+                    <FiCalendar className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">1:1 컨설팅</p>
-                    <p className="text-sm text-gray-600">오후 3:00 - 4:00</p>
+                    <p className="font-medium text-gray-900 dark:text-white">1:1 컨설팅</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">오후 3:00 - 4:00</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <div className="bg-secondary-100 p-2 rounded-lg">
-                    <FiAward className="w-5 h-5 text-secondary-600" />
+                  <div className="bg-secondary-100 dark:bg-secondary-900/30 p-2 rounded-lg">
+                    <FiAward className="w-5 h-5 text-secondary-600 dark:text-secondary-400" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">논술 첨삭 마감</p>
-                    <p className="text-sm text-gray-600">오후 6:00까지</p>
+                    <p className="font-medium text-gray-900 dark:text-white">논술 첨삭 마감</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">오후 6:00까지</p>
                   </div>
                 </div>
               </div>
