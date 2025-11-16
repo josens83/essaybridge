@@ -22,7 +22,12 @@ import Consulting from './pages/Consulting';
 import Profile from './pages/Profile';
 import Search from './pages/Search';
 import TutorDashboard from './pages/TutorDashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import FAQ from './pages/FAQ';
+import Terms from './pages/Terms';
+import Privacy from './pages/Privacy';
+import Guide from './pages/Guide';
+import Notice from './pages/Notice';
 import NotFound from './pages/NotFound';
 
 // Protected Route Component
@@ -49,6 +54,10 @@ const AppRoutes = () => {
         <Route path="/community" element={<Community />} />
         <Route path="/community/:id" element={<PostDetail />} />
         <Route path="/faq" element={<FAQ />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/guide" element={<Guide />} />
+        <Route path="/notice" element={<Notice />} />
 
         {/* Protected Routes */}
         <Route
@@ -128,6 +137,14 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <TutorDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
             </ProtectedRoute>
           }
         />
