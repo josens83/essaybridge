@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import Layout from './components/layout/Layout';
 
@@ -23,6 +24,7 @@ import Profile from './pages/Profile';
 import Search from './pages/Search';
 import TutorDashboard from './pages/TutorDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import Analytics from './pages/Analytics';
 import FAQ from './pages/FAQ';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
@@ -65,6 +67,14 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/analytics"
+          element={
+            <ProtectedRoute>
+              <Analytics />
             </ProtectedRoute>
           }
         />
@@ -159,13 +169,15 @@ const AppRoutes = () => {
 function App() {
   return (
     <ErrorBoundary>
-      <Router>
-        <AuthProvider>
-          <ToastProvider>
-            <AppRoutes />
-          </ToastProvider>
-        </AuthProvider>
-      </Router>
+      <ThemeProvider>
+        <Router>
+          <AuthProvider>
+            <ToastProvider>
+              <AppRoutes />
+            </ToastProvider>
+          </AuthProvider>
+        </Router>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

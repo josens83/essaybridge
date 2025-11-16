@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { FiMenu, FiX, FiBell, FiUser, FiSettings, FiLogOut, FiBook, FiSearch } from 'react-icons/fi';
+import { useTheme } from '../../contexts/ThemeContext';
+import { FiMenu, FiX, FiBell, FiUser, FiSettings, FiLogOut, FiBook, FiSearch, FiMoon, FiSun } from 'react-icons/fi';
 import { useState, useRef, useEffect } from 'react';
 
 const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -57,29 +59,29 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
+    <header className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-50 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="text-2xl font-bold text-primary-600">EssayBridge</div>
+            <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">EssayBridge</div>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
-            <Link to="/essays" className="text-gray-700 hover:text-primary-600 transition-colors">
+            <Link to="/essays" className="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
               논술 첨삭
             </Link>
-            <Link to="/courses" className="text-gray-700 hover:text-primary-600 transition-colors">
+            <Link to="/courses" className="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
               온라인 강의
             </Link>
-            <Link to="/consulting" className="text-gray-700 hover:text-primary-600 transition-colors">
+            <Link to="/consulting" className="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
               입시 컨설팅
             </Link>
-            <Link to="/community" className="text-gray-700 hover:text-primary-600 transition-colors">
+            <Link to="/community" className="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
               커뮤니티
             </Link>
-            <Link to="/pricing" className="text-gray-700 hover:text-primary-600 transition-colors">
+            <Link to="/pricing" className="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
               요금제
             </Link>
           </nav>
@@ -88,10 +90,19 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
               <>
+                {/* Theme Toggle */}
+                <button
+                  onClick={toggleTheme}
+                  className="p-2 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                  aria-label="Toggle theme"
+                >
+                  {theme === 'dark' ? <FiSun className="w-5 h-5" /> : <FiMoon className="w-5 h-5" />}
+                </button>
+
                 {/* Search */}
                 <Link
                   to="/search"
-                  className="p-2 text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-100"
+                  className="p-2 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   <FiSearch className="w-5 h-5" />
                 </Link>
@@ -228,9 +239,17 @@ const Header = () => {
               </>
             ) : (
               <>
+                {/* Theme Toggle */}
+                <button
+                  onClick={toggleTheme}
+                  className="p-2 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                  aria-label="Toggle theme"
+                >
+                  {theme === 'dark' ? <FiSun className="w-5 h-5" /> : <FiMoon className="w-5 h-5" />}
+                </button>
                 <Link
                   to="/login"
-                  className="text-gray-700 hover:text-primary-600 transition-colors"
+                  className="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   로그인
                 </Link>
