@@ -107,20 +107,20 @@ const EssayEditor = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 transition-colors">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             {isEditing ? '논술 수정' : '새 논술 작성'}
           </h1>
-          <p className="text-gray-600">전문가의 첨삭을 받을 논술을 작성해주세요.</p>
+          <p className="text-gray-600 dark:text-gray-400">전문가의 첨삭을 받을 논술을 작성해주세요.</p>
         </div>
 
         {/* Info Alert */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 flex items-start">
-          <FiAlertCircle className="w-5 h-5 text-blue-600 mr-3 flex-shrink-0 mt-0.5" />
-          <div className="text-sm text-blue-800">
+        <div className="bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-700 rounded-lg p-4 mb-6 flex items-start transition-colors">
+          <FiAlertCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-3 flex-shrink-0 mt-0.5" />
+          <div className="text-sm text-blue-800 dark:text-blue-200">
             <p className="font-semibold mb-1">첨삭 신청 전 확인사항</p>
             <ul className="list-disc list-inside space-y-1">
               <li>논술은 최소 500자 이상 작성해주세요.</li>
@@ -130,11 +130,11 @@ const EssayEditor = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg transition-colors">
           {/* Form Fields */}
-          <div className="p-6 space-y-6 border-b border-gray-200">
+          <div className="p-6 space-y-6 border-b border-gray-200 dark:border-gray-700">
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 논술 제목 *
               </label>
               <input
@@ -151,7 +151,7 @@ const EssayEditor = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="university" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="university" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   대학 *
                 </label>
                 <select
@@ -172,7 +172,7 @@ const EssayEditor = () => {
               </div>
 
               <div>
-                <label htmlFor="department" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="department" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   학과 *
                 </label>
                 <select
@@ -194,7 +194,7 @@ const EssayEditor = () => {
             </div>
 
             <div>
-              <label htmlFor="essayType" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="essayType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 논술 유형 *
               </label>
               <select
@@ -215,17 +215,17 @@ const EssayEditor = () => {
           {/* Editor */}
           <div className="p-6">
             <div className="flex items-center justify-between mb-3">
-              <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                 논술 내용 *
               </label>
               <div className="flex items-center space-x-4">
                 <span
                   className={`text-sm font-medium ${
                     wordCount < 500
-                      ? 'text-red-600'
+                      ? 'text-red-600 dark:text-red-400'
                       : wordCount > 2000
-                      ? 'text-orange-600'
-                      : 'text-gray-600'
+                      ? 'text-orange-600 dark:text-orange-400'
+                      : 'text-gray-600 dark:text-gray-400'
                   }`}
                 >
                   {wordCount.toLocaleString()}자
@@ -246,18 +246,18 @@ const EssayEditor = () => {
               className="input-field font-mono text-sm leading-relaxed"
             />
 
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
               💡 Tip: 30초마다 자동 저장됩니다. 제시문과 논제를 함께 작성하면 더 정확한 첨삭을 받을 수
               있습니다.
             </p>
           </div>
 
           {/* Actions */}
-          <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+          <div className="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between transition-colors">
             <button
               type="button"
               onClick={() => navigate('/essays')}
-              className="px-6 py-2 text-gray-700 hover:text-gray-900 transition-colors"
+              className="px-6 py-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
               취소
             </button>
@@ -287,11 +287,11 @@ const EssayEditor = () => {
         </div>
 
         {/* Guidelines */}
-        <div className="mt-8 bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">논술 작성 가이드</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-700">
+        <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow p-6 transition-colors">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">논술 작성 가이드</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-700 dark:text-gray-300">
             <div>
-              <h3 className="font-semibold text-gray-900 mb-2">✅ 좋은 예시</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">✅ 좋은 예시</h3>
               <ul className="list-disc list-inside space-y-1">
                 <li>제시문과 논제를 함께 제공</li>
                 <li>논리적이고 체계적인 구성</li>
@@ -300,7 +300,7 @@ const EssayEditor = () => {
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-2">❌ 피해야 할 점</h3>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">❌ 피해야 할 점</h3>
               <ul className="list-disc list-inside space-y-1">
                 <li>제시문 없이 답안만 작성</li>
                 <li>지나치게 짧거나 긴 글</li>
