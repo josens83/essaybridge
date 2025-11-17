@@ -11,6 +11,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Pricing from './pages/Pricing';
+import Checkout from './pages/Checkout';
+import PaymentSuccess from './pages/PaymentSuccess';
+import PaymentHistory from './pages/PaymentHistory';
 import Payment from './pages/Payment';
 import Courses from './pages/Courses';
 import CourseDetail from './pages/CourseDetail';
@@ -62,6 +65,30 @@ const AppRoutes = () => {
         <Route path="/notice" element={<Notice />} />
 
         {/* Protected Routes */}
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/payment/success"
+          element={
+            <ProtectedRoute>
+              <PaymentSuccess />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/payment/history"
+          element={
+            <ProtectedRoute>
+              <PaymentHistory />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/dashboard"
           element={
