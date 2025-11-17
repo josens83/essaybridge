@@ -233,6 +233,7 @@ export const pricingPlans: PricingPlan[] = [
   {
     id: '1',
     name: 'free',
+    displayName: '무료 체험',
     price: 0,
     period: 'monthly',
     features: [
@@ -248,6 +249,7 @@ export const pricingPlans: PricingPlan[] = [
   {
     id: '2',
     name: 'basic',
+    displayName: '베이직',
     price: 99000,
     period: 'monthly',
     features: [
@@ -265,6 +267,7 @@ export const pricingPlans: PricingPlan[] = [
   {
     id: '3',
     name: 'premium',
+    displayName: '프리미엄',
     price: 199000,
     period: 'monthly',
     features: [
