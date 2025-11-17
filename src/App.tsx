@@ -27,6 +27,8 @@ import Profile from './pages/Profile';
 import Search from './pages/Search';
 import TutorDashboard from './pages/TutorDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import ExpertDashboard from './pages/ExpertDashboard';
+import ConsultantDashboard from './pages/ConsultantDashboard';
 import Analytics from './pages/Analytics';
 import FAQ from './pages/FAQ';
 import Terms from './pages/Terms';
@@ -182,6 +184,22 @@ const AppRoutes = () => {
           element={
             <ProtectedRoute>
               <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/expert"
+          element={
+            <ProtectedRoute>
+              <ExpertDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/consultant"
+          element={
+            <ProtectedRoute>
+              <ConsultantDashboard />
             </ProtectedRoute>
           }
         />
