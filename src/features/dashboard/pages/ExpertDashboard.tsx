@@ -9,7 +9,7 @@ import {
   FiCalendar,
   FiTrendingUp
 } from 'react-icons/fi';
-import type { Essay } from '../../../types';
+import type { Essay } from '../../essays/types';
 
 const ExpertDashboard = () => {
   const navigate = useNavigate();

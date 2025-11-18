@@ -3,7 +3,7 @@
  */
 
 import api from '../../../api/client';
-import type { User, UserRole } from '../../../types';
+import type { User, UserRole } from '../../../shared/types';
 
 export interface LoginRequest {
   email: string;

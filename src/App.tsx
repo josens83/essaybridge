@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './features/auth';
 import { ToastProvider } from './contexts/ToastContext';
 import { ThemeProvider } from './contexts/ThemeContext';
-import ErrorBoundary from './components/common/ErrorBoundary';
+import { ErrorBoundary } from './shared/components';
 import Layout from './components/layout/Layout';
 
 // Public Pages

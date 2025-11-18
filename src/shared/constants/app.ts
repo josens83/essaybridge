@@ -3,20 +3,20 @@
  * Common values used throughout the application
  */
 
+import type { UserRole } from '../types';
+
 export const APP_NAME = 'EssayBridge';
 export const APP_DESCRIPTION = '입시 논술 전문 첨삭 및 컨설팅 플랫폼';
 
 /**
  * User Roles
  */
-export const USER_ROLES = {
+export const USER_ROLES: Record<string, UserRole> = {
   STUDENT: 'student',
   EXPERT: 'expert',
   CONSULTANT: 'consultant',
   ADMIN: 'admin',
 } as const;
-
-export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES];
 
 /**
  * Essay Status

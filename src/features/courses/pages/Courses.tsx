@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiStar, FiUsers, FiClock, FiFilter } from 'react-icons/fi';
 import { sampleCourses } from '../../../data/sampleData';
-import type { CourseLevel, CourseCategory } from '../../../types';
+import type { CourseLevel, CourseCategory } from '../types';
 
 const Courses = () => {
   const [filter, setFilter] = useState<{

@@ -3,7 +3,7 @@
  */
 
 import api from '../../../api/client';
-import type { Essay, EssayReview, EssayStatus, EssayType } from '../../../types';
+import type { Essay, EssayReview, EssayStatus, EssayType } from '../types';
 
 export interface CreateEssayRequest {
   title: string;

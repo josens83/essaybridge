@@ -3,7 +3,7 @@
  */
 
 import api from '../../../api/client';
-import type { SubscriptionPlan } from '../../../types';
+import type { SubscriptionPlan } from '../types';
 
 export interface CreatePaymentRequest {
   planId: string;

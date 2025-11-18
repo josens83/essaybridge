@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiMail, FiLock, FiUser, FiArrowRight } from 'react-icons/fi';
 import { useAuth } from '../AuthContext';
-import type { UserRole } from '../../../types';
+import type { UserRole } from '../../../shared/types';
 
 const Login = () => {
   const [email, setEmail] = useState('');
