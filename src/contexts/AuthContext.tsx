@@ -1,12 +1,24 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { User, StudentProfile, UserRole } from '../types';
+/**
+ * Authentication Context with Real API Integration
+ * Replaces mock authentication with actual API calls
+ */
+
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import type { User, UserRole } from '../types';
+import { authService } from '../api';
+import { tokenStorage } from '../utils/storage';
+import { handleError, getUserFriendlyMessage } from '../utils/errors';
 
 interface AuthContextType {
   user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
   login: (email: string, password: string, role: UserRole) => Promise<void>;
   register: (email: string, password: string, name: string, role: UserRole) => Promise<void>;
-  logout: () => void;
-  isAuthenticated: boolean;
+  logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
+  clearError: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,67 +33,141 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  /**
+   * Initialize auth state from stored token
+   */
   useEffect(() => {
-    // Load user from localStorage on mount
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    const initAuth = async () => {
+      const token = tokenStorage.getAccessToken();
+
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        // Fetch current user profile
+        const currentUser = await authService.getCurrentUser();
+        setUser(currentUser);
+      } catch (err) {
+        // Token invalid or expired
+        tokenStorage.clearTokens();
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initAuth();
+  }, []);
+
+  /**
+   * Login user
+   */
+  const login = useCallback(async (email: string, password: string, role: UserRole) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const response = await authService.login({ email, password, role });
+
+      // Store tokens
+      tokenStorage.setAccessToken(response.accessToken);
+      tokenStorage.setRefreshToken(response.refreshToken);
+
+      // Set user
+      setUser(response.user);
+    } catch (err) {
+      const appError = handleError(err);
+      const message = getUserFriendlyMessage(appError);
+      setError(message);
+      throw appError;
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
-  const login = async (email: string, _password: string, role: UserRole) => {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 500));
+  /**
+   * Register new user
+   */
+  const register = useCallback(
+    async (email: string, password: string, name: string, role: UserRole) => {
+      try {
+        setIsLoading(true);
+        setError(null);
 
-    // For demo purposes, create a mock user
-    const mockUser: StudentProfile = {
-      id: 'student1',
-      email,
-      name: email.split('@')[0],
-      role: role as 'student',
-      grade: 3,
-      targetUniversities: ['서울대학교', '연세대학교'],
-      interests: ['경영학과', '경제학과'],
-      subscriptionPlan: 'basic',
-      createdAt: new Date().toISOString(),
-    };
+        const response = await authService.register({ email, password, name, role });
 
-    setUser(mockUser);
-    localStorage.setItem('user', JSON.stringify(mockUser));
-  };
+        // Store tokens
+        tokenStorage.setAccessToken(response.accessToken);
+        tokenStorage.setRefreshToken(response.refreshToken);
 
-  const register = async (email: string, _password: string, name: string, role: UserRole) => {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 500));
+        // Set user
+        setUser(response.user);
+      } catch (err) {
+        const appError = handleError(err);
+        const message = getUserFriendlyMessage(appError);
+        setError(message);
+        throw appError;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    []
+  );
 
-    const mockUser: StudentProfile = {
-      id: `user_${Date.now()}`,
-      email,
-      name,
-      role: role as 'student',
-      grade: 3,
-      targetUniversities: [],
-      interests: [],
-      subscriptionPlan: 'free',
-      createdAt: new Date().toISOString(),
-    };
+  /**
+   * Logout user
+   */
+  const logout = useCallback(async () => {
+    try {
+      setIsLoading(true);
 
-    setUser(mockUser);
-    localStorage.setItem('user', JSON.stringify(mockUser));
-  };
+      // Call logout API
+      await authService.logout();
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      // Clear local state regardless of API call result
+      tokenStorage.clearTokens();
+      setUser(null);
+      setIsLoading(false);
+    }
+  }, []);
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
-  };
+  /**
+   * Refresh user data
+   */
+  const refreshUser = useCallback(async () => {
+    try {
+      const currentUser = await authService.getCurrentUser();
+      setUser(currentUser);
+    } catch (err) {
+      const appError = handleError(err);
+      const message = getUserFriendlyMessage(appError);
+      setError(message);
+    }
+  }, []);
 
-  const value = {
+  /**
+   * Clear error
+   */
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
+  const value: AuthContextType = {
     user,
+    isAuthenticated: !!user,
+    isLoading,
+    error,
     login,
     register,
     logout,
-    isAuthenticated: !!user,
+    refreshUser,
+    clearError,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
