@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FiCreditCard, FiCheck, FiLock } from 'react-icons/fi';
-import { useAuth } from '../contexts/AuthContext';
-import type { PricingPlan, PaymentMethod } from '../types';
+import { useAuth } from '../../auth';
+import type { PricingPlan, PaymentMethod } from '../../../types';
 
 const Checkout = () => {
   const location = useLocation();

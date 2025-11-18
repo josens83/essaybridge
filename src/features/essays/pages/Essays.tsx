@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { FiPlus, FiEdit, FiClock, FiCheckCircle } from 'react-icons/fi';
-import { sampleEssays } from '../data/sampleData';
+import { sampleEssays } from '../../../data/sampleData';
 
 const Essays = () => {
   return (

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../features/auth';
 import { FiUser, FiLock, FiCreditCard, FiBell, FiSave } from 'react-icons/fi';
 import { universities, departments } from '../data/sampleData';
 import type { StudentProfile } from '../types';

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FiCalendar, FiClock, FiStar, FiAward } from 'react-icons/fi';
-import { sampleConsultants } from '../data/sampleData';
+import { sampleConsultants } from '../../../data/sampleData';
 
 const Consulting = () => {
   const [selectedConsultant, setSelectedConsultant] = useState<string | null>(null);

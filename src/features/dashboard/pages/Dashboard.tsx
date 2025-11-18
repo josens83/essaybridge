@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../auth';
 import {
   FiEdit,
   FiBook,
@@ -9,7 +9,7 @@ import {
   FiClock,
   FiBarChart2,
 } from 'react-icons/fi';
-import { sampleEssays } from '../data/sampleData';
+import { sampleEssays } from '../../../data/sampleData';
 
 const Dashboard = () => {
   const { user } = useAuth();

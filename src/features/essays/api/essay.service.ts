@@ -2,8 +2,8 @@
  * Essay API Service
  */
 
-import api from '../client';
-import type { Essay, EssayReview, EssayStatus, EssayType } from '../../types';
+import api from '../../../api/client';
+import type { Essay, EssayReview, EssayStatus, EssayType } from '../../../types';
 
 export interface CreateEssayRequest {
   title: string;

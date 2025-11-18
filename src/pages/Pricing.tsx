@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiCheck, FiX, FiZap, FiStar, FiTrendingUp } from 'react-icons/fi';
 import { monthlyPlans, yearlyPlans } from '../data/pricingPlans';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../features/auth';
 import type { PricingPlan } from '../types';
 
 const Pricing = () => {

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../features/auth';
 import { useTheme } from '../../contexts/ThemeContext';
 import { FiMenu, FiX, FiBell, FiUser, FiSettings, FiLogOut, FiBook, FiSearch, FiMoon, FiSun } from 'react-icons/fi';
 import { useState, useRef, useEffect } from 'react';

@@ -10,7 +10,7 @@ import {
   FiUsers,
   FiTrendingUp
 } from 'react-icons/fi';
-import type { ConsultingSession } from '../types';
+import type { ConsultingSession } from '../../../types';
 
 const ConsultantDashboard = () => {
   const navigate = useNavigate();

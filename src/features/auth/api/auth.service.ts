@@ -2,8 +2,8 @@
  * Authentication API Service
  */
 
-import api from '../client';
-import type { User, UserRole } from '../../types';
+import api from '../../../api/client';
+import type { User, UserRole } from '../../../types';
 
 export interface LoginRequest {
   email: string;

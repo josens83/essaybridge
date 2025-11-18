@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { FiDownload, FiArrowLeft, FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
-import { sampleEssays, sampleReviews } from '../data/sampleData';
+import { sampleEssays, sampleReviews } from '../../../data/sampleData';
 
 const EssayReview = () => {
   const { id } = useParams();

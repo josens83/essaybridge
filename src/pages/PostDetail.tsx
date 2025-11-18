@@ -10,7 +10,7 @@ import {
   FiTrash2,
 } from 'react-icons/fi';
 import { samplePosts } from '../data/sampleData';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../features/auth';
 import type { PostComment } from '../types';
 
 const PostDetail = () => {

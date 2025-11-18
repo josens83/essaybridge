@@ -1,34 +1,52 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './features/auth';
 import { ToastProvider } from './contexts/ToastContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import Layout from './components/layout/Layout';
 
-// Pages
+// Public Pages
 import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
 import Pricing from './pages/Pricing';
-import Checkout from './pages/Checkout';
+
+// Auth Feature
+import { LoginPage as Login, RegisterPage as Register } from './features/auth';
+
+// Dashboard Feature
+import {
+  StudentDashboard as Dashboard,
+  AdminDashboard,
+  ExpertDashboard,
+  ConsultantDashboard
+} from './features/dashboard';
+
+// Payment Feature
+import {
+  PaymentPage as Payment,
+  CheckoutPage as Checkout
+} from './features/payment';
 import PaymentSuccess from './pages/PaymentSuccess';
 import PaymentHistory from './pages/PaymentHistory';
-import Payment from './pages/Payment';
-import Courses from './pages/Courses';
-import CourseDetail from './pages/CourseDetail';
-import Essays from './pages/Essays';
-import EssayEditor from './pages/EssayEditor';
-import EssayReview from './pages/EssayReview';
+
+// Courses Feature
+import { CoursesPage as Courses, CourseDetailPage as CourseDetail } from './features/courses';
+
+// Essays Feature
+import {
+  EssaysPage as Essays,
+  EssayEditorPage as EssayEditor,
+  EssayReviewPage as EssayReview
+} from './features/essays';
+
+// Consulting Feature
+import { ConsultingPage as Consulting } from './features/consulting';
+
+// Other Pages
 import Community from './pages/Community';
 import PostDetail from './pages/PostDetail';
-import Consulting from './pages/Consulting';
 import Profile from './pages/Profile';
 import Search from './pages/Search';
 import TutorDashboard from './pages/TutorDashboard';
-import AdminDashboard from './pages/AdminDashboard';
-import ExpertDashboard from './pages/ExpertDashboard';
-import ConsultantDashboard from './pages/ConsultantDashboard';
 import Analytics from './pages/Analytics';
 import FAQ from './pages/FAQ';
 import Terms from './pages/Terms';

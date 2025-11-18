@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FiSave, FiSend, FiAlertCircle } from 'react-icons/fi';
-import { universities, departments } from '../data/sampleData';
-import type { Essay, EssayType } from '../types';
+import { universities, departments } from '../../../data/sampleData';
+import type { Essay, EssayType } from '../../../types';
 
 const EssayEditor = () => {
   const { id } = useParams();

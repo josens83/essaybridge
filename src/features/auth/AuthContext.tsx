@@ -4,10 +4,10 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import type { User, UserRole } from '../types';
-import { authService } from '../api';
-import { tokenStorage } from '../utils/storage';
-import { handleError, getUserFriendlyMessage } from '../utils/errors';
+import type { User, UserRole } from '../../types';
+import authService from './api/auth.service';
+import { tokenStorage } from '../../utils/storage';
+import { handleError, getUserFriendlyMessage } from '../../utils/errors';
 
 interface AuthContextType {
   user: User | null;

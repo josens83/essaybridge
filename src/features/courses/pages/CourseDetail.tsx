@@ -9,8 +9,8 @@ import {
   FiCheck,
   FiLock,
 } from 'react-icons/fi';
-import { sampleCourses } from '../data/sampleData';
-import { useAuth } from '../contexts/AuthContext';
+import { sampleCourses } from '../../../data/sampleData';
+import { useAuth } from '../../auth';
 
 const CourseDetail = () => {
   const { id } = useParams();

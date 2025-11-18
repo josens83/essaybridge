@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FiCreditCard, FiSmartphone, FiCheckCircle } from 'react-icons/fi';
-import { pricingPlans } from '../data/sampleData';
+import { pricingPlans } from '../../../data/sampleData';
 
 const Payment = () => {
   const location = useLocation();
