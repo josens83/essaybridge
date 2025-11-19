@@ -21,6 +21,7 @@ import {
   ChatRoomItem,
   TypingIndicator,
   NewChatModal,
+  ChatErrorBoundary,
 } from '../components';
 import { LoadingSpinner } from '../../../shared/components';
 import type { ChatRoomType } from '../types';
@@ -440,12 +441,14 @@ const ChatPageContent: React.FC = () => {
   );
 };
 
-// 래퍼 컴포넌트 (Provider 포함)
+// 래퍼 컴포넌트 (Provider + ErrorBoundary 포함)
 const ChatPage: React.FC = () => {
   return (
-    <ChatProvider>
-      <ChatPageContent />
-    </ChatProvider>
+    <ChatErrorBoundary fallbackMessage="채팅 기능을 불러오는 중 문제가 발생했습니다.">
+      <ChatProvider>
+        <ChatPageContent />
+      </ChatProvider>
+    </ChatErrorBoundary>
   );
 };
 

@@ -10,3 +10,4 @@ export { default as TypingIndicator } from './TypingIndicator';
 export { default as NewChatModal } from './NewChatModal';
 export { default as ImageLightbox } from './ImageLightbox';
 export { default as LinkPreview, extractUrls, parseTextWithUrls } from './LinkPreview';
+export { default as ChatErrorBoundary } from './ChatErrorBoundary';
