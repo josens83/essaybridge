@@ -222,4 +222,4 @@ export const parseTextWithUrls = (text: string): Array<{ type: 'text' | 'url'; c
   return parts;
 };
 
-export default LinkPreview;
+export default React.memo(LinkPreview);

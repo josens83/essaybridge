@@ -12,8 +12,10 @@ import {
   FiImage,
   FiFile,
   FiCornerUpLeft,
+  FiAlertCircle,
 } from 'react-icons/fi';
 import { useChat } from '../hooks/useChatContext';
+import { validateFile, sanitizeMessage } from '../utils';
 
 const ChatInput: React.FC = () => {
   const {
@@ -31,6 +33,7 @@ const ChatInput: React.FC = () => {
   const [showAttachmentMenu, setShowAttachmentMenu] = useState(false);
   const [attachments, setAttachments] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [fileError, setFileError] = useState<string | null>(null);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -56,15 +59,16 @@ const ChatInput: React.FC = () => {
 
   // 메시지 전송
   const handleSend = async () => {
-    if (!message.trim() && attachments.length === 0) return;
+    const sanitizedMessage = sanitizeMessage(message);
+    if (!sanitizedMessage && attachments.length === 0) return;
 
     if (uiState.editingMessage) {
       // 수정 모드
-      editMessage(uiState.editingMessage.id, message.trim());
+      editMessage(uiState.editingMessage.id, sanitizedMessage);
     } else {
       // 새 메시지 전송
       await sendMessage(
-        message.trim(),
+        sanitizedMessage,
         attachments.length > 0 ? 'file' : 'text',
         attachments,
         uiState.replyingTo?.id
@@ -96,10 +100,29 @@ const ChatInput: React.FC = () => {
     setTyping(e.target.value.length > 0);
   };
 
-  // 파일 선택
+  // 파일 선택 (검증 포함)
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    setAttachments(prev => [...prev, ...files]);
+    const validFiles: File[] = [];
+    const errors: string[] = [];
+
+    files.forEach(file => {
+      const result = validateFile(file);
+      if (result.valid) {
+        validFiles.push(file);
+      } else if (result.error) {
+        errors.push(`${file.name}: ${result.error}`);
+      }
+    });
+
+    if (errors.length > 0) {
+      setFileError(errors.join('\n'));
+      setTimeout(() => setFileError(null), 5000);
+    }
+
+    if (validFiles.length > 0) {
+      setAttachments(prev => [...prev, ...validFiles]);
+    }
     setShowAttachmentMenu(false);
   };
 
@@ -151,8 +174,25 @@ const ChatInput: React.FC = () => {
     setIsDragging(false);
 
     const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
-      setAttachments(prev => [...prev, ...files]);
+    const validFiles: File[] = [];
+    const errors: string[] = [];
+
+    files.forEach(file => {
+      const result = validateFile(file);
+      if (result.valid) {
+        validFiles.push(file);
+      } else if (result.error) {
+        errors.push(`${file.name}: ${result.error}`);
+      }
+    });
+
+    if (errors.length > 0) {
+      setFileError(errors.join('\n'));
+      setTimeout(() => setFileError(null), 5000);
+    }
+
+    if (validFiles.length > 0) {
+      setAttachments(prev => [...prev, ...validFiles]);
     }
   };
 
@@ -186,6 +226,23 @@ const ChatInput: React.FC = () => {
               파일을 여기에 놓으세요
             </p>
           </div>
+        </div>
+      )}
+
+      {/* 파일 에러 메시지 */}
+      {fileError && (
+        <div className="mb-3 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start gap-2">
+          <FiAlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+          <div className="flex-1">
+            <p className="text-sm text-red-600 dark:text-red-400 font-medium">파일 업로드 실패</p>
+            <p className="text-xs text-red-500 dark:text-red-400 whitespace-pre-line">{fileError}</p>
+          </div>
+          <button
+            onClick={() => setFileError(null)}
+            className="p-1 hover:bg-red-100 dark:hover:bg-red-800/30 rounded"
+          >
+            <FiX className="w-4 h-4 text-red-500" />
+          </button>
         </div>
       )}
 

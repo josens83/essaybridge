@@ -409,4 +409,5 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
   );
 };
 
-export default ChatBubble;
+// React.memo로 불필요한 리렌더링 방지
+export default React.memo(ChatBubble);

@@ -188,4 +188,5 @@ const ChatRoomItem: React.FC<ChatRoomItemProps> = ({ room, isSelected, onClick }
   );
 };
 
-export default ChatRoomItem;
+// React.memo로 불필요한 리렌더링 방지
+export default React.memo(ChatRoomItem);

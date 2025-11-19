@@ -33,4 +33,4 @@ const TypingIndicator: React.FC<TypingIndicatorProps> = ({ typingUsers }) => {
   );
 };
 
-export default TypingIndicator;
+export default React.memo(TypingIndicator);
