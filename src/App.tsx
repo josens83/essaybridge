@@ -41,6 +41,9 @@ import {
 // Consulting Feature
 import { ConsultingPage as Consulting } from './features/consulting';
 
+// Chat Feature
+import { ChatPage as Chat, GlobalChatProvider } from './features/chat';
+
 // Other Pages
 import Community from './pages/Community';
 import PostDetail from './pages/PostDetail';
@@ -221,6 +224,14 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute>
+              <Chat />
+            </ProtectedRoute>
+          }
+        />
 
         {/* 404 Page */}
         <Route path="*" element={<NotFound />} />
@@ -235,9 +246,11 @@ function App() {
       <ThemeProvider>
         <Router>
           <AuthProvider>
-            <ToastProvider>
-              <AppRoutes />
-            </ToastProvider>
+            <GlobalChatProvider>
+              <ToastProvider>
+                <AppRoutes />
+              </ToastProvider>
+            </GlobalChatProvider>
           </AuthProvider>
         </Router>
       </ThemeProvider>
