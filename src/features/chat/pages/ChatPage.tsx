@@ -3,12 +3,13 @@
  * 채팅 메인 페이지 - 채팅방 목록 + 메시지 뷰 통합
  */
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import {
   FiMessageSquare,
   FiSearch,
   FiPlus,
   FiX,
+  FiArrowDown,
 } from 'react-icons/fi';
 import { ChatProvider, useChat } from '../hooks/useChatContext';
 import { useChatNotifications } from '../hooks/useChatNotifications';
@@ -171,6 +172,47 @@ const ChatMessageView: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const prevMessagesCountRef = useRef(messages.length);
+  const [showScrollButton, setShowScrollButton] = useState(false);
+
+  // 스크롤 위치 감지
+  const handleScroll = () => {
+    if (messagesContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current;
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
+      setShowScrollButton(!isNearBottom);
+    }
+  };
+
+  // 하단으로 스크롤
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // 날짜 포맷
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    if (date.toDateString() === today.toDateString()) {
+      return '오늘';
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return '어제';
+    } else {
+      return date.toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'short',
+      });
+    }
+  };
+
+  // 날짜가 다른지 확인
+  const isDifferentDay = (date1: string, date2: string) => {
+    return new Date(date1).toDateString() !== new Date(date2).toDateString();
+  };
 
   // 컴포넌트 마운트 시 알림 권한 요청
   useEffect(() => {
@@ -285,7 +327,8 @@ const ChatMessageView: React.FC = () => {
       {/* 메시지 영역 */}
       <div
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto px-4 py-2"
+        onScroll={handleScroll}
+        className="flex-1 overflow-y-auto px-4 py-2 relative"
       >
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
@@ -307,13 +350,28 @@ const ChatMessageView: React.FC = () => {
                 message.type !== 'system' &&
                 new Date(message.createdAt).getTime() - new Date(prevMessage.createdAt).getTime() < 60000;
 
+              // 날짜 구분선 표시 여부
+              const showDateDivider = index === 0 ||
+                (prevMessage && isDifferentDay(prevMessage.createdAt, message.createdAt));
+
               return (
-                <ChatBubble
-                  key={message.id}
-                  message={message}
-                  showAvatar={!isGrouped}
-                  isGrouped={isGrouped}
-                />
+                <React.Fragment key={message.id}>
+                  {/* 날짜 구분선 */}
+                  {showDateDivider && (
+                    <div className="flex items-center justify-center my-4">
+                      <div className="flex-1 border-t border-gray-200 dark:border-gray-700" />
+                      <span className="px-4 py-1 text-xs text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800">
+                        {formatDate(message.createdAt)}
+                      </span>
+                      <div className="flex-1 border-t border-gray-200 dark:border-gray-700" />
+                    </div>
+                  )}
+                  <ChatBubble
+                    message={message}
+                    showAvatar={!isGrouped}
+                    isGrouped={isGrouped}
+                  />
+                </React.Fragment>
               );
             })}
 
@@ -322,6 +380,17 @@ const ChatMessageView: React.FC = () => {
 
             <div ref={messagesEndRef} />
           </>
+        )}
+
+        {/* 스크롤 하단 버튼 */}
+        {showScrollButton && (
+          <button
+            onClick={scrollToBottom}
+            className="absolute bottom-4 right-4 p-3 bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-full shadow-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors z-10"
+            title="최신 메시지로 이동"
+          >
+            <FiArrowDown className="w-5 h-5" />
+          </button>
         )}
       </div>
 

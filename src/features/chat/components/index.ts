@@ -9,3 +9,4 @@ export { default as ChatRoomItem } from './ChatRoomItem';
 export { default as TypingIndicator } from './TypingIndicator';
 export { default as NewChatModal } from './NewChatModal';
 export { default as ImageLightbox } from './ImageLightbox';
+export { default as LinkPreview, extractUrls, parseTextWithUrls } from './LinkPreview';

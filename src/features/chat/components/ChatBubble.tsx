@@ -22,6 +22,7 @@ import type { ChatMessage } from '../types';
 import { useChat } from '../hooks/useChatContext';
 import { useAuth } from '../../auth';
 import ImageLightbox from './ImageLightbox';
+import LinkPreview, { extractUrls } from './LinkPreview';
 
 interface ChatBubbleProps {
   message: ChatMessage;
@@ -160,7 +161,13 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
 
             {/* 텍스트 메시지 */}
             {message.type === 'text' && (
-              <p className="whitespace-pre-wrap">{message.content}</p>
+              <>
+                <p className="whitespace-pre-wrap">{message.content}</p>
+                {/* URL 링크 프리뷰 */}
+                {extractUrls(message.content).slice(0, 1).map((url) => (
+                  <LinkPreview key={url} url={url} isOwnMessage={isOwnMessage} />
+                ))}
+              </>
             )}
 
             {/* 파일/이미지 메시지 */}
