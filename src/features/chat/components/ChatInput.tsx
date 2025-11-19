@@ -30,9 +30,11 @@ const ChatInput: React.FC = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [showAttachmentMenu, setShowAttachmentMenu] = useState(false);
   const [attachments, setAttachments] = useState<File[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dropZoneRef = useRef<HTMLDivElement>(null);
 
   // 답장/수정 모드 변경 시 포커스
   useEffect(() => {
@@ -122,6 +124,38 @@ const ChatInput: React.FC = () => {
     }
   };
 
+  // 드래그 앤 드롭 핸들러
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // 드롭존을 완전히 벗어났을 때만 상태 변경
+    if (dropZoneRef.current && !dropZoneRef.current.contains(e.relatedTarget as Node)) {
+      setIsDragging(false);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      setAttachments(prev => [...prev, ...files]);
+    }
+  };
+
   // 빠른 이모지 목록
   const quickEmojis = ['😊', '😂', '❤️', '👍', '🎉', '🤔', '👏', '🔥', '💯', '✨'];
 
@@ -133,7 +167,28 @@ const ChatInput: React.FC = () => {
   };
 
   return (
-    <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+    <div
+      ref={dropZoneRef}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+      className={`border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 relative ${
+        isDragging ? 'bg-primary-50 dark:bg-primary-900/20' : ''
+      }`}
+    >
+      {/* 드래그 앤 드롭 오버레이 */}
+      {isDragging && (
+        <div className="absolute inset-0 border-2 border-dashed border-primary-500 rounded-lg bg-primary-50/80 dark:bg-primary-900/40 flex items-center justify-center z-10">
+          <div className="text-center">
+            <FiPaperclip className="w-8 h-8 text-primary-500 mx-auto mb-2" />
+            <p className="text-primary-600 dark:text-primary-400 font-medium">
+              파일을 여기에 놓으세요
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* 답장/수정 미리보기 */}
       {(uiState.replyingTo || uiState.editingMessage) && (
         <div className="mb-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg flex items-start justify-between">

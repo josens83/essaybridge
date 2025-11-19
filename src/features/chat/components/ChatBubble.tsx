@@ -362,6 +362,30 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
             {formatTime(message.createdAt)}
           </span>
           {isOwnMessage && <StatusIcon />}
+
+          {/* 읽음 상태 - 읽은 사람 아바타 표시 */}
+          {isOwnMessage && message.readBy && message.readBy.length > 1 && (
+            <div className="flex items-center -space-x-1 ml-1">
+              {message.readBy
+                .filter(userId => userId !== currentUserId)
+                .slice(0, 3)
+                .map((userId, index) => (
+                  <div
+                    key={userId}
+                    className="w-4 h-4 rounded-full bg-gray-300 dark:bg-gray-600 border border-white dark:border-gray-800 flex items-center justify-center text-[8px] font-bold text-gray-600 dark:text-gray-300"
+                    title={`읽음`}
+                    style={{ zIndex: 3 - index }}
+                  >
+                    {userId.charAt(0).toUpperCase()}
+                  </div>
+                ))}
+              {message.readBy.length > 4 && (
+                <div className="w-4 h-4 rounded-full bg-gray-200 dark:bg-gray-700 border border-white dark:border-gray-800 flex items-center justify-center text-[7px] text-gray-500 dark:text-gray-400">
+                  +{message.readBy.length - 4}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

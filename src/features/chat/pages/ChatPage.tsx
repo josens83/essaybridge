@@ -12,6 +12,7 @@ import {
 } from 'react-icons/fi';
 import { ChatProvider, useChat } from '../hooks/useChatContext';
 import { useChatNotifications } from '../hooks/useChatNotifications';
+import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 import {
   ChatBubble,
   ChatInput,
@@ -164,6 +165,9 @@ const ChatMessageView: React.FC = () => {
   } = useChat();
 
   const { notifyNewMessage, requestNotificationPermission } = useChatNotifications();
+
+  // 키보드 단축키 활성화
+  useKeyboardShortcuts();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const prevMessagesCountRef = useRef(messages.length);

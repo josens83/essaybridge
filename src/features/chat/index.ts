@@ -9,6 +9,7 @@ export { default as ChatPage } from './pages/ChatPage';
 export { ChatProvider, useChat } from './hooks/useChatContext';
 export { GlobalChatProvider, useGlobalChat } from './hooks/useGlobalChat';
 export { useChatNotifications } from './hooks/useChatNotifications';
+export { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 
 // Components
 export * from './components';
