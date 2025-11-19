@@ -21,6 +21,7 @@ import {
 import type { ChatMessage } from '../types';
 import { useChat } from '../hooks/useChatContext';
 import { useAuth } from '../../auth';
+import ImageLightbox from './ImageLightbox';
 
 interface ChatBubbleProps {
   message: ChatMessage;
@@ -45,6 +46,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
 
   const [showMenu, setShowMenu] = useState(false);
   const [showReactionPicker, setShowReactionPicker] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState<{ url: string; name: string } | null>(null);
 
   const currentUserId = user?.id || 'student1';
   const isOwnMessage = message.senderId === currentUserId;
@@ -171,7 +173,8 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
                         <img
                           src={attachment.url}
                           alt={attachment.name}
-                          className="max-w-full max-h-60 object-cover cursor-pointer hover:opacity-90"
+                          className="max-w-full max-h-60 object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                          onClick={() => setLightboxImage({ url: attachment.url, name: attachment.name })}
                         />
                       </div>
                     ) : (
@@ -361,6 +364,16 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
           {isOwnMessage && <StatusIcon />}
         </div>
       </div>
+
+      {/* 이미지 라이트박스 */}
+      {lightboxImage && (
+        <ImageLightbox
+          isOpen={true}
+          imageUrl={lightboxImage.url}
+          fileName={lightboxImage.name}
+          onClose={() => setLightboxImage(null)}
+        />
+      )}
     </div>
   );
 };

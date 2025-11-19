@@ -42,7 +42,7 @@ import {
 import { ConsultingPage as Consulting } from './features/consulting';
 
 // Chat Feature
-import { ChatPage as Chat } from './features/chat';
+import { ChatPage as Chat, GlobalChatProvider } from './features/chat';
 
 // Other Pages
 import Community from './pages/Community';
@@ -246,9 +246,11 @@ function App() {
       <ThemeProvider>
         <Router>
           <AuthProvider>
-            <ToastProvider>
-              <AppRoutes />
-            </ToastProvider>
+            <GlobalChatProvider>
+              <ToastProvider>
+                <AppRoutes />
+              </ToastProvider>
+            </GlobalChatProvider>
           </AuthProvider>
         </Router>
       </ThemeProvider>

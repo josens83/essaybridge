@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../features/auth';
+import { useGlobalChat } from '../../features/chat';
 import { useTheme } from '../../contexts/ThemeContext';
 import { FiMenu, FiX, FiBell, FiUser, FiSettings, FiLogOut, FiBook, FiSearch, FiMoon, FiSun, FiMessageSquare } from 'react-icons/fi';
 import { useState, useRef, useEffect } from 'react';
 
 const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
+  const { totalUnreadCount } = useGlobalChat();
   const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
@@ -113,9 +115,11 @@ const Header = () => {
                   className="relative p-2 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   <FiMessageSquare className="w-5 h-5" />
-                  <span className="absolute top-1 right-1 w-4 h-4 bg-primary-600 text-white text-xs rounded-full flex items-center justify-center">
-                    2
-                  </span>
+                  {totalUnreadCount > 0 && (
+                    <span className="absolute top-1 right-1 w-4 h-4 bg-primary-600 text-white text-xs rounded-full flex items-center justify-center">
+                      {totalUnreadCount > 9 ? '9+' : totalUnreadCount}
+                    </span>
+                  )}
                 </Link>
 
                 {/* Notifications */}

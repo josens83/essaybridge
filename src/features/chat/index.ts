@@ -7,6 +7,8 @@ export { default as ChatPage } from './pages/ChatPage';
 
 // Context & Hooks
 export { ChatProvider, useChat } from './hooks/useChatContext';
+export { GlobalChatProvider, useGlobalChat } from './hooks/useGlobalChat';
+export { useChatNotifications } from './hooks/useChatNotifications';
 
 // Components
 export * from './components';

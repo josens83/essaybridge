@@ -11,17 +11,20 @@ import {
   FiX,
 } from 'react-icons/fi';
 import { ChatProvider, useChat } from '../hooks/useChatContext';
+import { useChatNotifications } from '../hooks/useChatNotifications';
 import {
   ChatBubble,
   ChatInput,
   ChatHeader,
   ChatRoomItem,
   TypingIndicator,
+  NewChatModal,
 } from '../components';
 import { LoadingSpinner } from '../../../shared/components';
+import type { ChatRoomType } from '../types';
 
 // 채팅방 목록 컴포넌트
-const ChatRoomList: React.FC = () => {
+const ChatRoomList: React.FC<{ onNewChat: () => void }> = ({ onNewChat }) => {
   const {
     rooms,
     selectedRoom,
@@ -77,7 +80,10 @@ const ChatRoomList: React.FC = () => {
               </span>
             )}
           </div>
-          <button className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-gray-600 dark:text-gray-300">
+          <button
+            onClick={onNewChat}
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-gray-600 dark:text-gray-300"
+          >
             <FiPlus className="w-5 h-5" />
           </button>
         </div>
@@ -157,13 +163,31 @@ const ChatMessageView: React.FC = () => {
     setSearchQuery,
   } = useChat();
 
+  const { notifyNewMessage, requestNotificationPermission } = useChatNotifications();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const prevMessagesCountRef = useRef(messages.length);
 
-  // 새 메시지 시 스크롤
+  // 컴포넌트 마운트 시 알림 권한 요청
+  useEffect(() => {
+    requestNotificationPermission();
+  }, [requestNotificationPermission]);
+
+  // 새 메시지 시 스크롤 및 알림
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+
+    // 새 메시지가 추가된 경우에만 알림
+    if (messages.length > prevMessagesCountRef.current && messages.length > 0) {
+      const latestMessage = messages[messages.length - 1];
+      // 자신이 보낸 메시지가 아닌 경우에만 알림
+      if (latestMessage.senderId !== 'student1') {
+        const otherParticipant = selectedRoom?.participants.find(p => p.userId !== 'student1');
+        notifyNewMessage(latestMessage, otherParticipant?.name);
+      }
+    }
+    prevMessagesCountRef.current = messages.length;
+  }, [messages, notifyNewMessage, selectedRoom]);
 
   // 검색 결과
   const searchResults = uiState.searchQuery ? searchMessages(uiState.searchQuery) : [];
@@ -305,7 +329,17 @@ const ChatMessageView: React.FC = () => {
 
 // 메인 채팅 페이지 (반응형)
 const ChatPageContent: React.FC = () => {
-  const { selectedRoom } = useChat();
+  const { selectedRoom, createRoom } = useChat();
+  const [isNewChatModalOpen, setNewChatModalOpen] = React.useState(false);
+
+  const handleCreateRoom = async (type: ChatRoomType, participantId: string) => {
+    try {
+      await createRoom(type, participantId);
+      setNewChatModalOpen(false);
+    } catch (error) {
+      console.error('Failed to create room:', error);
+    }
+  };
 
   return (
     <div className="h-[calc(100vh-4rem)] flex bg-white dark:bg-gray-800">
@@ -313,7 +347,7 @@ const ChatPageContent: React.FC = () => {
       <div className={`w-full lg:w-96 border-r border-gray-200 dark:border-gray-700 ${
         selectedRoom ? 'hidden lg:flex flex-col' : 'flex flex-col'
       }`}>
-        <ChatRoomList />
+        <ChatRoomList onNewChat={() => setNewChatModalOpen(true)} />
       </div>
 
       {/* 메시지 뷰 (데스크톱: 항상 표시, 모바일: 채팅방 선택 시만) */}
@@ -322,6 +356,13 @@ const ChatPageContent: React.FC = () => {
       }`}>
         <ChatMessageView />
       </div>
+
+      {/* 새 채팅 모달 */}
+      <NewChatModal
+        isOpen={isNewChatModalOpen}
+        onClose={() => setNewChatModalOpen(false)}
+        onCreateRoom={handleCreateRoom}
+      />
     </div>
   );
 };

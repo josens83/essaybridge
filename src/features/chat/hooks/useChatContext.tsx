@@ -9,8 +9,9 @@ import type {
   ChatMessage,
   ChatUIState,
   TypingEvent,
+  ChatRoomType,
 } from '../types';
-import { mockChatRooms, mockMessages, delay, generateId, generateAutoResponse } from '../api/chat.mock';
+import { mockChatRooms, mockMessages, mockParticipants, delay, generateId, generateAutoResponse } from '../api/chat.mock';
 import { useAuth } from '../../auth';
 
 // ============ Context 타입 ============
@@ -20,6 +21,7 @@ interface ChatContextType {
   rooms: ChatRoom[];
   selectedRoom: ChatRoom | null;
   selectRoom: (roomId: string | null) => void;
+  createRoom: (type: ChatRoomType, participantId: string) => Promise<string>;
 
   // 메시지 관련
   messages: ChatMessage[];
@@ -151,6 +153,50 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       editingMessage: null,
     }));
   }, []);
+
+  // ============ 채팅방 생성 ============
+
+  const createRoom = useCallback(async (type: ChatRoomType, participantId: string): Promise<string> => {
+    const participant = mockParticipants[participantId];
+    if (!participant) throw new Error('Invalid participant');
+
+    const currentUserParticipant = {
+      userId: currentUserId,
+      name: user?.name || '김학생',
+      role: (user?.role || 'student') as 'student' | 'expert' | 'consultant' | 'admin',
+      profileImage: undefined,
+      status: 'online' as const,
+      lastSeen: new Date().toISOString(),
+    };
+
+    const newRoomId = generateId();
+    const now = new Date().toISOString();
+
+    const newRoom: ChatRoom = {
+      id: newRoomId,
+      type,
+      participants: [
+        currentUserParticipant,
+        participant,
+      ],
+      createdAt: now,
+      updatedAt: now,
+      unreadCount: 0,
+      isPinned: false,
+      isMuted: false,
+      metadata: {
+        essayTitle: type === 'essay_review' ? '새 논술 첨삭' : undefined,
+      },
+    };
+
+    // 채팅방 목록에 추가
+    setRooms(prev => [newRoom, ...prev]);
+
+    // 새 채팅방 선택
+    selectRoom(newRoomId);
+
+    return newRoomId;
+  }, [currentUserId, user, selectRoom]);
 
   // ============ 메시지 전송 ============
 
@@ -442,6 +488,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     rooms,
     selectedRoom,
     selectRoom,
+    createRoom,
     messages,
     sendMessage,
     loadMoreMessages,
