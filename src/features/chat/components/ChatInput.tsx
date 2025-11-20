@@ -314,6 +314,9 @@ const ChatInput: React.FC = () => {
           <button
             onClick={() => setShowAttachmentMenu(!showAttachmentMenu)}
             className="p-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
+            aria-label="파일 첨부"
+            aria-expanded={showAttachmentMenu}
+            aria-haspopup="true"
           >
             <FiPaperclip className="w-5 h-5" />
           </button>
@@ -365,6 +368,8 @@ const ChatInput: React.FC = () => {
             rows={1}
             className="w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-700 border-0 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             style={{ maxHeight: '150px' }}
+            aria-label="메시지 입력"
+            aria-multiline="true"
           />
         </div>
 
@@ -373,6 +378,9 @@ const ChatInput: React.FC = () => {
           <button
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             className="p-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
+            aria-label="이모지 선택"
+            aria-expanded={showEmojiPicker}
+            aria-haspopup="true"
           >
             <FiSmile className="w-5 h-5" />
           </button>
@@ -403,6 +411,7 @@ const ChatInput: React.FC = () => {
               ? 'bg-primary-600 hover:bg-primary-700 text-white'
               : 'bg-gray-100 dark:bg-gray-700 text-gray-400'
           } disabled:opacity-50`}
+          aria-label="메시지 전송"
         >
           <FiSend className="w-5 h-5" />
         </button>

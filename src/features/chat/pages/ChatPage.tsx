@@ -330,6 +330,9 @@ const ChatMessageView: React.FC = () => {
         ref={messagesContainerRef}
         onScroll={handleScroll}
         className="flex-1 overflow-y-auto px-4 py-2 relative"
+        role="log"
+        aria-label="채팅 메시지 목록"
+        aria-live="polite"
       >
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
