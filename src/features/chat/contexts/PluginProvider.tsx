@@ -13,6 +13,7 @@ import { chatEventBus } from '../core/EventBus';
 import type { ChatPlugin } from '../core/Plugin';
 import { TypingIndicatorPlugin } from '../plugins/TypingIndicatorPlugin';
 import { MessageReactionPlugin } from '../plugins/MessageReactionPlugin';
+import { MessageThreadPlugin } from '../plugins/MessageThreadPlugin';
 
 interface PluginContextType {
   pluginManager: PluginManager | null;
@@ -68,6 +69,14 @@ export const PluginProvider: React.FC<PluginProviderProps> = ({
           maxReactionsPerUser: 10,
         });
         await manager.register(reactionPlugin);
+
+        // 메시지 스레드 플러그인 (Discord/Slack 스타일)
+        const threadPlugin = new MessageThreadPlugin({
+          maxThreadDepth: 1,
+          autoMarkAsRead: true,
+          notifyOnReply: true,
+        });
+        await manager.register(threadPlugin);
 
         // 플러그인 목록 업데이트
         setPlugins(manager.getAllPlugins());

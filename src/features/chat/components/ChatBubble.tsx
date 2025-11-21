@@ -24,17 +24,20 @@ import { useAuth } from '../../auth';
 import ImageLightbox from './ImageLightbox';
 import LinkPreview, { extractUrls } from './LinkPreview';
 import { MessageReactions } from './MessageReactions';
+import { ThreadButton } from './ThreadButton';
 
 interface ChatBubbleProps {
   message: ChatMessage;
   showAvatar?: boolean;
   isGrouped?: boolean;
+  onOpenThread?: (threadId: string, messageId: string) => void;
 }
 
 const ChatBubble: React.FC<ChatBubbleProps> = ({
   message,
   showAvatar = true,
   isGrouped = false,
+  onOpenThread,
 }) => {
   const { user } = useAuth();
   const {
@@ -339,6 +342,13 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
 
         {/* 리액션 표시 - 플러그인 시스템 사용 */}
         <MessageReactions messageId={message.id} isOwnMessage={isOwnMessage} />
+
+        {/* 스레드 버튼 - Discord/Slack 스타일 */}
+        {!message.threadId && ( // 스레드 내 메시지가 아닌 경우만 표시
+          <div className="mt-1">
+            <ThreadButton messageId={message.id} onOpenThread={onOpenThread} />
+          </div>
+        )}
 
         {/* 시간 및 상태 */}
         <div className={`flex items-center gap-1.5 mt-1 ${isOwnMessage ? 'flex-row-reverse' : 'flex-row'}`}>

@@ -6,3 +6,4 @@
 export { default as TypingIndicatorPlugin } from './TypingIndicatorPlugin';
 export { default as MessageReactionPlugin } from './MessageReactionPlugin';
 export type { Reaction, ReactionSummary } from './MessageReactionPlugin';
+export { default as MessageThreadPlugin } from './MessageThreadPlugin';

@@ -23,6 +23,7 @@ import {
   TypingIndicator,
   NewChatModal,
   ChatErrorBoundary,
+  ThreadView,
 } from '../components';
 import DevTools from '../components/DevTools';
 import { LoadingSpinner } from '../../../shared/components';
@@ -178,9 +179,18 @@ const ChatMessageView: React.FC = () => {
   const prevMessagesCountRef = useRef(messages.length);
   const [showScrollButton, setShowScrollButton] = useState(false);
 
+  // 스레드 관련 상태 (Discord/Slack 스타일)
+  const [isThreadOpen, setIsThreadOpen] = useState(false);
+  const [openThreadId, setOpenThreadId] = useState<string | null>(null);
+  const [openThreadMessageId, setOpenThreadMessageId] = useState<string | null>(null);
+
   // 선택된 채팅방 변경 시 GlobalChatProvider에도 알림 (플러그인 시스템용)
   useEffect(() => {
     setCurrentRoomId(selectedRoom?.id || null);
+    // 채팅방 변경 시 스레드 닫기
+    setIsThreadOpen(false);
+    setOpenThreadId(null);
+    setOpenThreadMessageId(null);
   }, [selectedRoom, setCurrentRoomId]);
 
   // 스크롤 위치 감지
@@ -195,6 +205,20 @@ const ChatMessageView: React.FC = () => {
   // 하단으로 스크롤
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // 스레드 열기 핸들러
+  const handleOpenThread = (threadId: string, messageId: string) => {
+    setOpenThreadId(threadId);
+    setOpenThreadMessageId(messageId);
+    setIsThreadOpen(true);
+  };
+
+  // 스레드 닫기 핸들러
+  const handleCloseThread = () => {
+    setIsThreadOpen(false);
+    setOpenThreadId(null);
+    setOpenThreadMessageId(null);
   };
 
   // 날짜 포맷
@@ -265,9 +289,11 @@ const ChatMessageView: React.FC = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-gray-50 dark:bg-gray-900">
-      {/* 헤더 */}
-      <ChatHeader room={selectedRoom} onBack={() => selectRoom(null)} />
+    <div className="flex-1 flex">
+      {/* 메인 채팅 영역 */}
+      <div className="flex-1 flex flex-col bg-gray-50 dark:bg-gray-900">
+        {/* 헤더 */}
+        <ChatHeader room={selectedRoom} onBack={() => selectRoom(null)} />
 
       {/* 검색 오버레이 */}
       {uiState.isSearchOpen && (
@@ -382,6 +408,7 @@ const ChatMessageView: React.FC = () => {
                     message={message}
                     showAvatar={!isGrouped}
                     isGrouped={isGrouped}
+                    onOpenThread={handleOpenThread}
                   />
                 </React.Fragment>
               );
@@ -406,8 +433,17 @@ const ChatMessageView: React.FC = () => {
         )}
       </div>
 
-      {/* 입력창 */}
-      <ChatInput />
+        {/* 입력창 */}
+        <ChatInput />
+      </div>
+
+      {/* 스레드 뷰 (Discord/Slack 스타일 사이드 패널) */}
+      <ThreadView
+        isOpen={isThreadOpen}
+        threadId={openThreadId}
+        parentMessageId={openThreadMessageId}
+        onClose={handleCloseThread}
+      />
     </div>
   );
 };

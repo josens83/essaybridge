@@ -21,6 +21,13 @@ export interface ChatEventMap extends EventMap {
   'message:deleted': { messageId: string; roomId: string };
   'message:edited': { messageId: string; newContent: string };
 
+  // 스레드 관련 (Discord/Slack 스타일)
+  'thread:created': { threadId: string; parentMessageId: string; roomId: string };
+  'thread:opened': { threadId: string; parentMessageId: string };
+  'thread:closed': { threadId: string };
+  'thread:reply': { threadId: string; messageId: string };
+  'thread:updated': { threadId: string; replyCount: number; lastReplyAt: string };
+
   // 채팅방 관련
   'room:selected': { roomId: string };
   'room:created': { roomId: string; type: string };

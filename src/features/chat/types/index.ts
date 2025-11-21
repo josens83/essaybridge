@@ -86,12 +86,30 @@ export interface ChatMessage {
   readBy: string[];  // userId 배열
   createdAt: string;
 
+  // 스레드 관련 (Discord/Slack 스타일)
+  threadId?: string;  // 이 메시지가 속한 스레드 ID (없으면 메인 채팅)
+  threadReplyCount?: number;  // 이 메시지에 달린 스레드 답글 수
+  hasThread?: boolean;  // 스레드가 시작된 메시지인지
+
   // 시스템 메시지용
   systemData?: {
     action: 'room_created' | 'user_joined' | 'user_left' | 'essay_submitted' | 'review_completed';
     targetUserId?: string;
     targetUserName?: string;
   };
+}
+
+// ============ 스레드 관련 타입 ============
+
+export interface MessageThread {
+  id: string;
+  parentMessageId: string;  // 스레드를 시작한 메시지
+  roomId: string;
+  messages: ChatMessage[];  // 스레드 내 메시지들
+  participantIds: string[];  // 스레드에 참여한 사용자들
+  unreadCount: number;  // 읽지 않은 답글 수
+  lastReplyAt: string;
+  createdAt: string;
 }
 
 // ============ API 요청/응답 타입 ============
