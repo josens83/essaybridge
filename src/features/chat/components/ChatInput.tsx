@@ -14,6 +14,10 @@ import {
   FiCornerUpLeft,
 } from 'react-icons/fi';
 import { useChat } from '../hooks/useChatContext';
+import { mentionPlugin } from '../plugins/MentionPlugin';
+import { markdownPlugin } from '../plugins/MarkdownPlugin';
+import MentionAutocomplete from '../plugins/MentionAutocomplete';
+import type { MentionUser, MarkdownFormat } from '../plugins/types';
 
 const ChatInput: React.FC = () => {
   const {
@@ -31,6 +35,12 @@ const ChatInput: React.FC = () => {
   const [showAttachmentMenu, setShowAttachmentMenu] = useState(false);
   const [attachments, setAttachments] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+
+  // 멘션 자동완성 상태
+  const [showMentionAutocomplete, setShowMentionAutocomplete] = useState(false);
+  const [mentionSuggestions, setMentionSuggestions] = useState<(MentionUser | { type: 'special'; name: string })[]>([]);
+  const [mentionSearchText, setMentionSearchText] = useState('');
+  const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 });
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -84,6 +94,61 @@ const ChatInput: React.FC = () => {
 
   // 키보드 이벤트
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    // 멘션 자동완성이 열려있으면 키보드 이벤트를 가로채지 않음
+    if (showMentionAutocomplete) {
+      if (['ArrowUp', 'ArrowDown', 'Enter', 'Tab', 'Escape'].includes(e.key)) {
+        if (e.key === 'Escape') {
+          setShowMentionAutocomplete(false);
+        }
+        return; // MentionAutocomplete에서 처리
+      }
+    }
+
+    // Markdown 포맷 키보드 단축키
+    const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+    const ctrlKey = isMac ? e.metaKey : e.ctrlKey;
+
+    if (ctrlKey) {
+      let format: MarkdownFormat | null = null;
+
+      switch (e.key.toLowerCase()) {
+        case 'b':
+          format = 'bold';
+          break;
+        case 'i':
+          format = 'italic';
+          break;
+        case 'u':
+          format = 'underline';
+          break;
+        case 'e':
+          format = 'code';
+          break;
+      }
+
+      if (format && textareaRef.current) {
+        e.preventDefault();
+        const start = textareaRef.current.selectionStart;
+        const end = textareaRef.current.selectionEnd;
+
+        if (start !== end) {
+          // 텍스트가 선택된 경우
+          const result = markdownPlugin.toggleFormat(message, format, start, end);
+          setMessage(result.newText);
+
+          // 선택 영역 복원
+          setTimeout(() => {
+            if (textareaRef.current) {
+              textareaRef.current.selectionStart = result.newStart;
+              textareaRef.current.selectionEnd = result.newEnd;
+              textareaRef.current.focus();
+            }
+          }, 0);
+        }
+        return;
+      }
+    }
+
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -92,8 +157,33 @@ const ChatInput: React.FC = () => {
 
   // 입력 변경
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
-    setTyping(e.target.value.length > 0);
+    const newValue = e.target.value;
+    setMessage(newValue);
+    setTyping(newValue.length > 0);
+
+    // @ 감지 및 멘션 자동완성
+    const cursorPosition = e.target.selectionStart || 0;
+    const mentionMatch = mentionPlugin.detectMention(newValue, cursorPosition);
+
+    if (mentionMatch) {
+      // 자동완성 표시
+      const suggestions = mentionPlugin.getSuggestions(mentionMatch.matchText);
+      setMentionSuggestions(suggestions);
+      setMentionSearchText(mentionMatch.matchText);
+
+      // 자동완성 위치 계산
+      if (textareaRef.current) {
+        const rect = textareaRef.current.getBoundingClientRect();
+        setMentionPosition({
+          top: rect.top - 300, // 위쪽에 표시
+          left: rect.left,
+        });
+      }
+
+      setShowMentionAutocomplete(suggestions.length > 0);
+    } else {
+      setShowMentionAutocomplete(false);
+    }
   };
 
   // 파일 선택
@@ -154,6 +244,24 @@ const ChatInput: React.FC = () => {
     if (files.length > 0) {
       setAttachments(prev => [...prev, ...files]);
     }
+  };
+
+  // 멘션 선택
+  const handleMentionSelect = (item: MentionUser | { type: 'special'; name: string }) => {
+    const cursorPosition = textareaRef.current?.selectionStart || 0;
+    const result = mentionPlugin.insertMention(message, cursorPosition, item);
+
+    setMessage(result.newText);
+    setShowMentionAutocomplete(false);
+
+    // 커서 위치 복원
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.selectionStart = result.newCursorPosition;
+        textareaRef.current.selectionEnd = result.newCursorPosition;
+        textareaRef.current.focus();
+      }
+    }, 0);
   };
 
   // 빠른 이모지 목록
@@ -248,6 +356,16 @@ const ChatInput: React.FC = () => {
             </div>
           ))}
         </div>
+      )}
+
+      {/* 멘션 자동완성 */}
+      {showMentionAutocomplete && (
+        <MentionAutocomplete
+          suggestions={mentionSuggestions}
+          onSelect={handleMentionSelect}
+          position={mentionPosition}
+          searchText={mentionSearchText}
+        />
       )}
 
       {/* 입력 영역 */}
