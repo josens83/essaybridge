@@ -23,6 +23,7 @@ import { useChat } from '../hooks/useChatContext';
 import { useAuth } from '../../auth';
 import ImageLightbox from './ImageLightbox';
 import LinkPreview, { extractUrls } from './LinkPreview';
+import { MessageReactions } from './MessageReactions';
 
 interface ChatBubbleProps {
   message: ChatMessage;
@@ -336,32 +337,8 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
           )}
         </div>
 
-        {/* 리액션 표시 */}
-        {message.reactions && message.reactions.length > 0 && (
-          <div className={`flex flex-wrap gap-1 mt-1 ${isOwnMessage ? 'justify-end' : 'justify-start'}`}>
-            {message.reactions.map((reaction) => (
-              <button
-                key={reaction.emoji}
-                onClick={() => {
-                  const hasReacted = reaction.users.some(u => u.userId === currentUserId);
-                  if (hasReacted) {
-                    removeReaction(message.id, reaction.emoji);
-                  } else {
-                    addReaction(message.id, reaction.emoji);
-                  }
-                }}
-                className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs ${
-                  reaction.users.some(u => u.userId === currentUserId)
-                    ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
-                }`}
-              >
-                <span>{reaction.emoji}</span>
-                <span>{reaction.count}</span>
-              </button>
-            ))}
-          </div>
-        )}
+        {/* 리액션 표시 - 플러그인 시스템 사용 */}
+        <MessageReactions messageId={message.id} isOwnMessage={isOwnMessage} />
 
         {/* 시간 및 상태 */}
         <div className={`flex items-center gap-1.5 mt-1 ${isOwnMessage ? 'flex-row-reverse' : 'flex-row'}`}>

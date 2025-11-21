@@ -14,6 +14,7 @@ import {
 import { ChatProvider, useChat } from '../hooks/useChatContext';
 import { useChatNotifications } from '../hooks/useChatNotifications';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
+import { useGlobalChat } from '../hooks/useGlobalChat';
 import {
   ChatBubble,
   ChatInput,
@@ -23,6 +24,7 @@ import {
   NewChatModal,
   ChatErrorBoundary,
 } from '../components';
+import DevTools from '../components/DevTools';
 import { LoadingSpinner } from '../../../shared/components';
 import type { ChatRoomType } from '../types';
 
@@ -167,6 +169,7 @@ const ChatMessageView: React.FC = () => {
   } = useChat();
 
   const { notifyNewMessage, requestNotificationPermission } = useChatNotifications();
+  const { setCurrentRoomId } = useGlobalChat();
 
   // 키보드 단축키 활성화
   useKeyboardShortcuts();
@@ -174,6 +177,11 @@ const ChatMessageView: React.FC = () => {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const prevMessagesCountRef = useRef(messages.length);
   const [showScrollButton, setShowScrollButton] = useState(false);
+
+  // 선택된 채팅방 변경 시 GlobalChatProvider에도 알림 (플러그인 시스템용)
+  useEffect(() => {
+    setCurrentRoomId(selectedRoom?.id || null);
+  }, [selectedRoom, setCurrentRoomId]);
 
   // 스크롤 위치 감지
   const handleScroll = () => {
@@ -440,6 +448,9 @@ const ChatPageContent: React.FC = () => {
         onClose={() => setNewChatModalOpen(false)}
         onCreateRoom={handleCreateRoom}
       />
+
+      {/* 개발자 도구 (DEV 환경에서만) */}
+      <DevTools />
     </div>
   );
 };
