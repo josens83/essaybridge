@@ -16,3 +16,6 @@ export { ThreadButton } from './ThreadButton';
 export { ThreadView } from './ThreadView';
 export { MentionText } from './MentionText';
 export { MentionAutocomplete } from './MentionAutocomplete';
+export { MarkdownText } from './MarkdownText';
+export { FormattedText } from './FormattedText';
+export { FormattingToolbar } from './FormattingToolbar';

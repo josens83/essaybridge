@@ -25,7 +25,7 @@ import ImageLightbox from './ImageLightbox';
 import LinkPreview, { extractUrls } from './LinkPreview';
 import { MessageReactions } from './MessageReactions';
 import { ThreadButton } from './ThreadButton';
-import { MentionText } from './MentionText';
+import { FormattedText } from './FormattedText';
 
 interface ChatBubbleProps {
   message: ChatMessage;
@@ -170,7 +170,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
             {message.type === 'text' && (
               <>
                 <p className="whitespace-pre-wrap">
-                  <MentionText
+                  <FormattedText
                     text={message.content}
                     messageId={message.id}
                     roomId={roomId}

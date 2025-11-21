@@ -18,6 +18,7 @@ export const FeatureFlag = {
   MESSAGE_REACTIONS: 'message_reactions',
   MESSAGE_EDITING: 'message_editing',
   MESSAGE_THREADING: 'message_threading',
+  RICH_TEXT_FORMATTING: 'rich_text_formatting',
 
   // 파일 공유
   FILE_UPLOAD: 'file_upload',
@@ -79,6 +80,7 @@ export class FeatureToggleManager {
     const enabledByDefault: FeatureFlag[] = [
       FeatureFlag.TYPING_INDICATOR,
       FeatureFlag.READ_RECEIPTS,
+      FeatureFlag.RICH_TEXT_FORMATTING,
       FeatureFlag.FILE_UPLOAD,
       FeatureFlag.IMAGE_PREVIEW,
       FeatureFlag.LINK_PREVIEW,

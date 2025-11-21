@@ -17,7 +17,12 @@ import {
 import { useChat } from '../hooks/useChatContext';
 import { validateFile, sanitizeMessage } from '../utils';
 import { MentionAutocomplete } from './MentionAutocomplete';
+import { FormattingToolbar } from './FormattingToolbar';
 import type { MentionUser } from '../plugins/MentionPlugin';
+import { usePlugin } from '../contexts/PluginProvider';
+import type { MarkdownPlugin } from '../plugins/MarkdownPlugin';
+import { useFeatureToggle } from '../core/FeatureToggle';
+import { FeatureFlag } from '../core/FeatureToggle';
 
 const ChatInput: React.FC = () => {
   const {
@@ -45,6 +50,10 @@ const ChatInput: React.FC = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dropZoneRef = useRef<HTMLDivElement>(null);
+
+  // 플러그인
+  const markdownPlugin = usePlugin<MarkdownPlugin>('markdown');
+  const markdownEnabled = useFeatureToggle(FeatureFlag.RICH_TEXT_FORMATTING);
 
   // 답장/수정 모드 변경 시 포커스
   useEffect(() => {
@@ -95,6 +104,24 @@ const ChatInput: React.FC = () => {
 
   // 키보드 이벤트
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Markdown 단축키 (Ctrl/Cmd + B, I, U 등)
+    if ((e.ctrlKey || e.metaKey) && markdownEnabled && markdownPlugin) {
+      switch (e.key.toLowerCase()) {
+        case 'b':
+          e.preventDefault();
+          handleFormat('bold');
+          return;
+        case 'i':
+          e.preventDefault();
+          handleFormat('italic');
+          return;
+        case 'u':
+          e.preventDefault();
+          handleFormat('underline');
+          return;
+      }
+    }
+
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -150,6 +177,56 @@ const ChatInput: React.FC = () => {
         textareaRef.current.focus();
       }
     }, 0);
+  };
+
+  // 포맷팅 처리
+  const handleFormat = (format: 'bold' | 'italic' | 'underline' | 'strikethrough' | 'code' | 'spoiler') => {
+    if (!textareaRef.current || !markdownPlugin) return;
+
+    const textarea = textareaRef.current;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = message.slice(start, end);
+
+    if (selectedText) {
+      // 선택된 텍스트를 포맷팅
+      const formattedText = markdownPlugin.wrap(selectedText, format);
+      const newMessage = message.slice(0, start) + formattedText + message.slice(end);
+
+      setMessage(newMessage);
+
+      // 커서 위치 조정
+      setTimeout(() => {
+        if (textareaRef.current) {
+          const newCursorPos = start + formattedText.length;
+          textareaRef.current.setSelectionRange(newCursorPos, newCursorPos);
+          textareaRef.current.focus();
+        }
+      }, 0);
+    } else {
+      // 선택된 텍스트가 없으면 포맷 마크 삽입
+      const formatMarks: Record<typeof format, string> = {
+        bold: '****',
+        italic: '**',
+        underline: '____',
+        strikethrough: '~~~~',
+        code: '``',
+        spoiler: '||||',
+      };
+
+      const marks = formatMarks[format];
+      const newMessage = message.slice(0, start) + marks + message.slice(end);
+      setMessage(newMessage);
+
+      // 커서를 포맷 마크 사이에 위치
+      setTimeout(() => {
+        if (textareaRef.current) {
+          const newCursorPos = start + marks.length / 2;
+          textareaRef.current.setSelectionRange(newCursorPos, newCursorPos);
+          textareaRef.current.focus();
+        }
+      }, 0);
+    }
   };
 
   // 파일 선택 (검증 포함)
@@ -326,6 +403,13 @@ const ChatInput: React.FC = () => {
           >
             <FiX className="w-4 h-4 text-gray-500" />
           </button>
+        </div>
+      )}
+
+      {/* 포맷팅 툴바 (Markdown 활성화 시) */}
+      {markdownEnabled && (
+        <div className="mb-3">
+          <FormattingToolbar onFormat={handleFormat} />
         </div>
       )}
 

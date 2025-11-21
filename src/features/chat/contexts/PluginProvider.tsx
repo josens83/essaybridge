@@ -15,6 +15,7 @@ import { TypingIndicatorPlugin } from '../plugins/TypingIndicatorPlugin';
 import { MessageReactionPlugin } from '../plugins/MessageReactionPlugin';
 import { MessageThreadPlugin } from '../plugins/MessageThreadPlugin';
 import { MentionPlugin } from '../plugins/MentionPlugin';
+import { MarkdownPlugin } from '../plugins/MarkdownPlugin';
 
 interface PluginContextType {
   pluginManager: PluginManager | null;
@@ -87,6 +88,20 @@ export const PluginProvider: React.FC<PluginProviderProps> = ({
           maxSuggestions: 10,
         });
         await manager.register(mentionPlugin);
+
+        // Markdown 플러그인 (Discord 스타일)
+        const markdownPlugin = new MarkdownPlugin({
+          enableBold: true,
+          enableItalic: true,
+          enableUnderline: true,
+          enableStrikethrough: true,
+          enableCode: true,
+          enableCodeBlock: true,
+          enableQuote: true,
+          enableEmoji: true,
+          enableSpoiler: true,
+        });
+        await manager.register(markdownPlugin);
 
         // 플러그인 목록 업데이트
         setPlugins(manager.getAllPlugins());
