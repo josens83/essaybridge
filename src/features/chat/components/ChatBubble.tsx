@@ -23,6 +23,7 @@ import { useChat } from '../hooks/useChatContext';
 import { useAuth } from '../../auth';
 import ImageLightbox from './ImageLightbox';
 import LinkPreview, { extractUrls } from './LinkPreview';
+import FormattedText from '../plugins/FormattedText';
 
 interface ChatBubbleProps {
   message: ChatMessage;
@@ -162,7 +163,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
             {/* 텍스트 메시지 */}
             {message.type === 'text' && (
               <>
-                <p className="whitespace-pre-wrap">{message.content}</p>
+                <FormattedText text={message.content} className="whitespace-pre-wrap" />
                 {/* URL 링크 프리뷰 */}
                 {extractUrls(message.content).slice(0, 1).map((url) => (
                   <LinkPreview key={url} url={url} isOwnMessage={isOwnMessage} />
