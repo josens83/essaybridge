@@ -16,6 +16,8 @@ import {
 } from 'react-icons/fi';
 import { useChat } from '../hooks/useChatContext';
 import { validateFile, sanitizeMessage } from '../utils';
+import { MentionAutocomplete } from './MentionAutocomplete';
+import type { MentionUser } from '../plugins/MentionPlugin';
 
 const ChatInput: React.FC = () => {
   const {
@@ -34,6 +36,11 @@ const ChatInput: React.FC = () => {
   const [attachments, setAttachments] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [fileError, setFileError] = useState<string | null>(null);
+
+  // 멘션 자동완성 상태
+  const [showMentionAutocomplete, setShowMentionAutocomplete] = useState(false);
+  const [mentionQuery, setMentionQuery] = useState('');
+  const [mentionStartIndex, setMentionStartIndex] = useState(-1);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -96,8 +103,53 @@ const ChatInput: React.FC = () => {
 
   // 입력 변경
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
-    setTyping(e.target.value.length > 0);
+    const value = e.target.value;
+    setMessage(value);
+    setTyping(value.length > 0);
+
+    // 멘션 감지 (@로 시작하는 단어 찾기)
+    const cursorPos = e.target.selectionStart;
+    const textBeforeCursor = value.slice(0, cursorPos);
+    const mentionMatch = textBeforeCursor.match(/@(\w*)$/);
+
+    if (mentionMatch) {
+      setMentionQuery(mentionMatch[1]);
+      setMentionStartIndex(cursorPos - mentionMatch[0].length);
+      setShowMentionAutocomplete(true);
+    } else {
+      setShowMentionAutocomplete(false);
+      setMentionQuery('');
+      setMentionStartIndex(-1);
+    }
+  };
+
+  // 멘션 선택 처리
+  const handleMentionSelect = (user: MentionUser | { type: 'special'; text: string }) => {
+    if (!textareaRef.current) return;
+
+    const mentionText = 'type' in user ? user.text : `@${user.name}`;
+    const cursorPos = textareaRef.current.selectionStart;
+
+    // 멘션 텍스트 삽입
+    const newMessage =
+      message.slice(0, mentionStartIndex) +
+      mentionText +
+      ' ' +
+      message.slice(cursorPos);
+
+    setMessage(newMessage);
+    setShowMentionAutocomplete(false);
+    setMentionQuery('');
+    setMentionStartIndex(-1);
+
+    // 커서 위치 조정
+    setTimeout(() => {
+      if (textareaRef.current) {
+        const newCursorPos = mentionStartIndex + mentionText.length + 1;
+        textareaRef.current.setSelectionRange(newCursorPos, newCursorPos);
+        textareaRef.current.focus();
+      }
+    }, 0);
   };
 
   // 파일 선택 (검증 포함)
@@ -371,6 +423,18 @@ const ChatInput: React.FC = () => {
             aria-label="메시지 입력"
             aria-multiline="true"
           />
+
+          {/* 멘션 자동완성 */}
+          {showMentionAutocomplete && (
+            <div className="absolute bottom-full left-0 mb-2">
+              <MentionAutocomplete
+                query={mentionQuery}
+                roomId="default"
+                onSelect={handleMentionSelect}
+                onClose={() => setShowMentionAutocomplete(false)}
+              />
+            </div>
+          )}
         </div>
 
         {/* 이모지 버튼 */}

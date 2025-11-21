@@ -25,12 +25,14 @@ import ImageLightbox from './ImageLightbox';
 import LinkPreview, { extractUrls } from './LinkPreview';
 import { MessageReactions } from './MessageReactions';
 import { ThreadButton } from './ThreadButton';
+import { MentionText } from './MentionText';
 
 interface ChatBubbleProps {
   message: ChatMessage;
   showAvatar?: boolean;
   isGrouped?: boolean;
   onOpenThread?: (threadId: string, messageId: string) => void;
+  roomId?: string;
 }
 
 const ChatBubble: React.FC<ChatBubbleProps> = ({
@@ -38,6 +40,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
   showAvatar = true,
   isGrouped = false,
   onOpenThread,
+  roomId = 'default',
 }) => {
   const { user } = useAuth();
   const {
@@ -166,7 +169,13 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
             {/* 텍스트 메시지 */}
             {message.type === 'text' && (
               <>
-                <p className="whitespace-pre-wrap">{message.content}</p>
+                <p className="whitespace-pre-wrap">
+                  <MentionText
+                    text={message.content}
+                    messageId={message.id}
+                    roomId={roomId}
+                  />
+                </p>
                 {/* URL 링크 프리뷰 */}
                 {extractUrls(message.content).slice(0, 1).map((url) => (
                   <LinkPreview key={url} url={url} isOwnMessage={isOwnMessage} />

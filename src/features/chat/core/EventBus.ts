@@ -28,6 +28,11 @@ export interface ChatEventMap extends EventMap {
   'thread:reply': { threadId: string; messageId: string };
   'thread:updated': { threadId: string; replyCount: number; lastReplyAt: string };
 
+  // 멘션 관련 (Slack 스타일)
+  'mention:detected': { messageId: string; mentionedUserIds: string[] };
+  'mention:added': { messageId: string; userId: string; type: 'user' | 'channel' | 'here' };
+  'mention:clicked': { userId: string; messageId: string };
+
   // 채팅방 관련
   'room:selected': { roomId: string };
   'room:created': { roomId: string; type: string };

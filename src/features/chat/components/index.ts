@@ -14,3 +14,5 @@ export { default as ChatErrorBoundary } from './ChatErrorBoundary';
 export { MessageReactions } from './MessageReactions';
 export { ThreadButton } from './ThreadButton';
 export { ThreadView } from './ThreadView';
+export { MentionText } from './MentionText';
+export { MentionAutocomplete } from './MentionAutocomplete';

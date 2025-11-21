@@ -14,6 +14,7 @@ import type { ChatPlugin } from '../core/Plugin';
 import { TypingIndicatorPlugin } from '../plugins/TypingIndicatorPlugin';
 import { MessageReactionPlugin } from '../plugins/MessageReactionPlugin';
 import { MessageThreadPlugin } from '../plugins/MessageThreadPlugin';
+import { MentionPlugin } from '../plugins/MentionPlugin';
 
 interface PluginContextType {
   pluginManager: PluginManager | null;
@@ -77,6 +78,15 @@ export const PluginProvider: React.FC<PluginProviderProps> = ({
           notifyOnReply: true,
         });
         await manager.register(threadPlugin);
+
+        // 멘션 플러그인 (Slack 스타일)
+        const mentionPlugin = new MentionPlugin({
+          enableChannelMentions: true,
+          enableHereMentions: true,
+          enableEveryoneMentions: false,
+          maxSuggestions: 10,
+        });
+        await manager.register(mentionPlugin);
 
         // 플러그인 목록 업데이트
         setPlugins(manager.getAllPlugins());
