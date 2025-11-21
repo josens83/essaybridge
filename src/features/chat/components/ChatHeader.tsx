@@ -18,6 +18,7 @@ import {
 import type { ChatRoom } from '../types';
 import { useChat } from '../hooks/useChatContext';
 import { useAuth } from '../../auth';
+import PresenceIndicator from './PresenceIndicator';
 
 interface ChatHeaderProps {
   room: ChatRoom;
@@ -90,16 +91,24 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ room, onBack }) => {
         )}
 
         {/* 아바타 */}
-        <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
-          {otherParticipant?.profileImage ? (
-            <img
-              src={otherParticipant.profileImage}
-              alt={otherParticipant.name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-sm font-semibold text-gray-600 dark:text-gray-300">
-              {otherParticipant?.name[0] || '?'}
+        <div className="relative">
+          <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
+            {otherParticipant?.profileImage ? (
+              <img
+                src={otherParticipant.profileImage}
+                alt={otherParticipant.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-sm font-semibold text-gray-600 dark:text-gray-300">
+                {otherParticipant?.name[0] || '?'}
+              </div>
+            )}
+          </div>
+          {/* 온라인 상태 표시 */}
+          {otherParticipant && (
+            <div className="absolute bottom-0 right-0">
+              <PresenceIndicator status={otherParticipant.status} size="md" />
             </div>
           )}
         </div>

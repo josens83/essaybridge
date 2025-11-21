@@ -21,9 +21,12 @@ import {
   ChatRoomItem,
   TypingIndicator,
   NewChatModal,
+  ThreadView,
 } from '../components';
 import { LoadingSpinner } from '../../../shared/components';
-import type { ChatRoomType } from '../types';
+import type { ChatRoomType, ChatMessage } from '../types';
+import { threadPlugin } from '../plugins/ThreadPlugin';
+import type { Thread } from '../plugins/ThreadPlugin';
 
 // 채팅방 목록 컴포넌트
 const ChatRoomList: React.FC<{ onNewChat: () => void }> = ({ onNewChat }) => {
@@ -173,6 +176,7 @@ const ChatMessageView: React.FC = () => {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const prevMessagesCountRef = useRef(messages.length);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [openThread, setOpenThread] = useState<Thread | null>(null);
 
   // 스크롤 위치 감지
   const handleScroll = () => {
@@ -234,6 +238,51 @@ const ChatMessageView: React.FC = () => {
     }
     prevMessagesCountRef.current = messages.length;
   }, [messages, notifyNewMessage, selectedRoom]);
+
+  // 스레드 열기 이벤트 리스너
+  useEffect(() => {
+    const handleOpenThread = (event: CustomEvent) => {
+      const { messageId } = event.detail;
+      const message = messages.find(m => m.id === messageId);
+      if (message) {
+        const thread = threadPlugin.getOrCreateThread(message);
+        setOpenThread(thread);
+      }
+    };
+
+    window.addEventListener('openThread', handleOpenThread as EventListener);
+    return () => {
+      window.removeEventListener('openThread', handleOpenThread as EventListener);
+    };
+  }, [messages]);
+
+  // 스레드 답글 전송
+  const handleSendThreadReply = async (content: string, parentMessageId: string) => {
+    // 답글 메시지 생성
+    const replyMessage: ChatMessage = {
+      id: `msg-${Date.now()}-${Math.random()}`,
+      roomId: selectedRoom?.id || '',
+      senderId: 'student1',
+      senderName: '학생',
+      senderRole: 'student',
+      content,
+      type: 'text',
+      status: 'sent',
+      createdAt: new Date().toISOString(),
+      isPinned: false,
+      isEdited: false,
+      readBy: ['student1'],
+    };
+
+    // 스레드에 답글 추가
+    threadPlugin.addReply(parentMessageId, replyMessage);
+
+    // 스레드 상태 업데이트
+    const updatedThread = threadPlugin.getThread(parentMessageId);
+    if (updatedThread) {
+      setOpenThread(updatedThread);
+    }
+  };
 
   // 검색 결과
   const searchResults = uiState.searchQuery ? searchMessages(uiState.searchQuery) : [];
@@ -396,6 +445,15 @@ const ChatMessageView: React.FC = () => {
 
       {/* 입력창 */}
       <ChatInput />
+
+      {/* 스레드 뷰 */}
+      {openThread && (
+        <ThreadView
+          thread={openThread}
+          onClose={() => setOpenThread(null)}
+          onSendReply={handleSendThreadReply}
+        />
+      )}
     </div>
   );
 };

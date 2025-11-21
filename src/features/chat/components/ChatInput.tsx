@@ -12,12 +12,15 @@ import {
   FiImage,
   FiFile,
   FiCornerUpLeft,
+  FiMic,
 } from 'react-icons/fi';
 import { useChat } from '../hooks/useChatContext';
 import { mentionPlugin } from '../plugins/MentionPlugin';
 import { markdownPlugin } from '../plugins/MarkdownPlugin';
 import MentionAutocomplete from '../plugins/MentionAutocomplete';
+import VoiceRecorder from './VoiceRecorder';
 import type { MentionUser, MarkdownFormat } from '../plugins/types';
+import type { VoiceMessage } from '../plugins/VoiceMessagePlugin';
 
 const ChatInput: React.FC = () => {
   const {
@@ -35,6 +38,7 @@ const ChatInput: React.FC = () => {
   const [showAttachmentMenu, setShowAttachmentMenu] = useState(false);
   const [attachments, setAttachments] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [isRecordingVoice, setIsRecordingVoice] = useState(false);
 
   // 멘션 자동완성 상태
   const [showMentionAutocomplete, setShowMentionAutocomplete] = useState(false);
@@ -264,6 +268,27 @@ const ChatInput: React.FC = () => {
     }, 0);
   };
 
+  // 음성 메시지 녹음 시작
+  const handleStartVoiceRecording = () => {
+    setIsRecordingVoice(true);
+  };
+
+  // 음성 메시지 전송
+  const handleSendVoiceMessage = async (voiceMessage: VoiceMessage) => {
+    // TODO: 음성 메시지를 서버로 전송하는 로직
+    // 현재는 일반 메시지로 처리 (플레이스홀더)
+    await sendMessage(
+      `🎤 음성 메시지 (${Math.floor(voiceMessage.duration)}초)`,
+      'text'
+    );
+    setIsRecordingVoice(false);
+  };
+
+  // 음성 메시지 녹음 취소
+  const handleCancelVoiceRecording = () => {
+    setIsRecordingVoice(false);
+  };
+
   // 빠른 이모지 목록
   const quickEmojis = ['😊', '😂', '❤️', '👍', '🎉', '🤔', '👏', '🔥', '💯', '✨'];
 
@@ -368,8 +393,16 @@ const ChatInput: React.FC = () => {
         />
       )}
 
-      {/* 입력 영역 */}
-      <div className="flex items-end gap-2">
+      {/* 음성 녹음 중 */}
+      {isRecordingVoice ? (
+        <VoiceRecorder
+          onSend={handleSendVoiceMessage}
+          onCancel={handleCancelVoiceRecording}
+        />
+      ) : (
+        <>
+          {/* 입력 영역 */}
+          <div className="flex items-end gap-2">
         {/* 첨부 버튼 */}
         <div className="relative">
           <button
@@ -455,6 +488,15 @@ const ChatInput: React.FC = () => {
           )}
         </div>
 
+        {/* 음성 메시지 버튼 */}
+        <button
+          onClick={handleStartVoiceRecording}
+          className="p-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
+          title="음성 메시지"
+        >
+          <FiMic className="w-5 h-5" />
+        </button>
+
         {/* 전송 버튼 */}
         <button
           onClick={handleSend}
@@ -469,10 +511,12 @@ const ChatInput: React.FC = () => {
         </button>
       </div>
 
-      {/* 안내 텍스트 */}
-      <p className="mt-2 text-xs text-gray-400 dark:text-gray-500 text-center">
-        Enter로 전송, Shift+Enter로 줄바꿈
-      </p>
+          {/* 안내 텍스트 */}
+          <p className="mt-2 text-xs text-gray-400 dark:text-gray-500 text-center">
+            Enter로 전송, Shift+Enter로 줄바꿈
+          </p>
+        </>
+      )}
     </div>
   );
 };

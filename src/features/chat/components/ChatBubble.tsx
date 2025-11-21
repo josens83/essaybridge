@@ -17,6 +17,7 @@ import {
   FiFile,
   FiDownload,
   FiAlertCircle,
+  FiMessageSquare,
 } from 'react-icons/fi';
 import type { ChatMessage } from '../types';
 import { useChat } from '../hooks/useChatContext';
@@ -24,6 +25,7 @@ import { useAuth } from '../../auth';
 import ImageLightbox from './ImageLightbox';
 import LinkPreview, { extractUrls } from './LinkPreview';
 import FormattedText from '../plugins/FormattedText';
+import { threadPlugin } from '../plugins/ThreadPlugin';
 
 interface ChatBubbleProps {
   message: ChatMessage;
@@ -53,6 +55,18 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
   const currentUserId = user?.id || 'student1';
   const isOwnMessage = message.senderId === currentUserId;
   const isSystemMessage = message.type === 'system';
+
+  // 스레드 답글 수 가져오기
+  const thread = threadPlugin.getThread(message.id);
+  const replyCount = thread?.replies.length || 0;
+
+  // 스레드 열기 핸들러
+  const handleOpenThread = () => {
+    // ThreadView를 열기 위해 이벤트 발생
+    // ChatPage에서 이 이벤트를 감지하여 ThreadView를 표시
+    threadPlugin.getOrCreateThread(message);
+    window.dispatchEvent(new CustomEvent('openThread', { detail: { messageId: message.id } }));
+  };
 
   // 시간 포맷
   const formatTime = (dateString: string) => {
@@ -247,8 +261,18 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
             <button
               onClick={() => setReplyingTo(message)}
               className="p-1.5 rounded-full bg-white dark:bg-gray-700 shadow-sm hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300"
+              title="답장"
             >
               <FiCornerUpLeft className="w-4 h-4" />
+            </button>
+
+            {/* 스레드 답글 */}
+            <button
+              onClick={handleOpenThread}
+              className="p-1.5 rounded-full bg-white dark:bg-gray-700 shadow-sm hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300"
+              title="스레드에서 답글"
+            >
+              <FiMessageSquare className="w-4 h-4" />
             </button>
 
             {/* 더보기 메뉴 */}
@@ -362,6 +386,17 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
               </button>
             ))}
           </div>
+        )}
+
+        {/* 스레드 답글 수 표시 */}
+        {replyCount > 0 && (
+          <button
+            onClick={handleOpenThread}
+            className="flex items-center gap-1 mt-1 px-2 py-1 rounded-lg text-xs text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
+          >
+            <FiMessageSquare className="w-3 h-3" />
+            <span>{replyCount}개의 답글</span>
+          </button>
         )}
 
         {/* 시간 및 상태 */}

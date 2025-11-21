@@ -13,6 +13,7 @@ import {
 } from 'react-icons/fi';
 import type { ChatRoom } from '../types';
 import { useAuth } from '../../auth';
+import PresenceIndicator from './PresenceIndicator';
 
 interface ChatRoomItemProps {
   room: ChatRoom;
@@ -52,20 +53,6 @@ const ChatRoomItem: React.FC<ChatRoomItemProps> = ({ room, isSelected, onClick }
         return '고객 지원';
       default:
         return '';
-    }
-  };
-
-  // 온라인 상태 색상
-  const getStatusColor = () => {
-    switch (otherParticipant?.status) {
-      case 'online':
-        return 'bg-green-500';
-      case 'away':
-        return 'bg-yellow-500';
-      case 'busy':
-        return 'bg-red-500';
-      default:
-        return 'bg-gray-400';
     }
   };
 
@@ -126,7 +113,11 @@ const ChatRoomItem: React.FC<ChatRoomItemProps> = ({ room, isSelected, onClick }
         </div>
 
         {/* 온라인 상태 표시 */}
-        <div className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-gray-800 ${getStatusColor()}`} />
+        {otherParticipant && (
+          <div className="absolute bottom-0 right-0">
+            <PresenceIndicator status={otherParticipant.status} size="md" />
+          </div>
+        )}
       </div>
 
       {/* 내용 */}
