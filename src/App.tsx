@@ -57,6 +57,7 @@ import Privacy from './pages/Privacy';
 import Guide from './pages/Guide';
 import Notice from './pages/Notice';
 import NotFound from './pages/NotFound';
+import AdmissionPage from './pages/AdmissionPage';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -77,6 +78,7 @@ const AppRoutes = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/pricing" element={<Pricing />} />
+        <Route path="/admission" element={<AdmissionPage />} />
         <Route path="/courses" element={<Courses />} />
         <Route path="/courses/:id" element={<CourseDetail />} />
         <Route path="/community" element={<Community />} />
