@@ -4,7 +4,6 @@ import {
   FiBook,
   FiUsers,
   FiTrendingUp,
-  FiAward,
   FiCheckCircle,
   FiZap,
   FiTarget,
@@ -12,6 +11,7 @@ import {
   FiStar,
   FiArrowRight,
 } from 'react-icons/fi';
+import { SocialProof } from '../shared/components';
 
 const Home = () => {
   return (
@@ -228,53 +228,9 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Success Stories - Card Carousel */}
+      {/* Social Proof - Trust Building Section */}
       <section className="py-28 bg-white dark:bg-zinc-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-section-title mb-4">
-              <span className="gradient-text">합격 후기</span>
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-400">선배들의 생생한 합격 스토리</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            {[
-              { university: '서울대 경영학과', name: '김○○', color: 'indigo' },
-              { university: '연세대 경제학과', name: '이○○', color: 'purple' },
-              { university: '고려대 법학과', name: '박○○', color: 'pink' },
-            ].map((story, index) => (
-              <div
-                key={index}
-                className="card-hover group"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`p-2 rounded-lg bg-gradient-to-br from-${story.color}-500 to-${story.color}-600`}>
-                    <FiAward className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="font-bold text-gray-900 dark:text-white">
-                    {story.university} 합격
-                  </span>
-                </div>
-                <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
-                  "EssayBridge의 체계적인 첨삭과 컨설팅 덕분에 논술 실력이 눈에 띄게
-                  향상되었습니다. 특히 대학별 맞춤 전략이 큰 도움이 되었어요."
-                </p>
-                <div className="flex items-center gap-2">
-                  <div className="flex -space-x-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <FiStar key={star} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                    ))}
-                  </div>
-                  <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
-                    - {story.name} 학생
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <SocialProof />
       </section>
 
       {/* CTA Section - Gradient with Glassmorphism */}
