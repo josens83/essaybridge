@@ -1,6 +1,6 @@
 /**
  * ChatInput Component
- * 메시지 입력창 - 텍스트, 파일 첨부, 이모지, 답장 지원
+ * 메시지 입력창 - 텍스트, 파일 첨부, 이모지, 답장, 음성메시지, 포맷팅 지원
  */
 
 import React, { useState, useRef, useEffect } from 'react';
@@ -12,12 +12,20 @@ import {
   FiImage,
   FiFile,
   FiCornerUpLeft,
+  FiMic,
+  FiBold,
+  FiItalic,
+  FiUnderline,
+  FiCode,
 } from 'react-icons/fi';
+import { TbStrikethrough } from 'react-icons/tb';
 import { useChat } from '../hooks/useChatContext';
 import { mentionPlugin } from '../plugins/MentionPlugin';
 import { markdownPlugin } from '../plugins/MarkdownPlugin';
 import MentionAutocomplete from '../plugins/MentionAutocomplete';
+import VoiceRecorder from './VoiceRecorder';
 import type { MentionUser, MarkdownFormat } from '../plugins/types';
+import type { VoiceMessage } from '../plugins/VoiceMessagePlugin';
 
 const ChatInput: React.FC = () => {
   const {
@@ -35,6 +43,13 @@ const ChatInput: React.FC = () => {
   const [showAttachmentMenu, setShowAttachmentMenu] = useState(false);
   const [attachments, setAttachments] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+
+  // 음성 메시지 상태
+  const [isRecordingVoice, setIsRecordingVoice] = useState(false);
+
+  // 포맷팅 툴바 상태
+  const [showFormattingToolbar, setShowFormattingToolbar] = useState(false);
+  const [hasTextSelection, setHasTextSelection] = useState(false);
 
   // 멘션 자동완성 상태
   const [showMentionAutocomplete, setShowMentionAutocomplete] = useState(false);
@@ -64,6 +79,15 @@ const ChatInput: React.FC = () => {
     }
   }, [message]);
 
+  // 텍스트 선택 감지
+  const handleSelect = () => {
+    if (textareaRef.current) {
+      const start = textareaRef.current.selectionStart;
+      const end = textareaRef.current.selectionEnd;
+      setHasTextSelection(start !== end);
+    }
+  };
+
   // 메시지 전송
   const handleSend = async () => {
     if (!message.trim() && attachments.length === 0) return;
@@ -85,10 +109,45 @@ const ChatInput: React.FC = () => {
     setAttachments([]);
     setShowEmojiPicker(false);
     setShowAttachmentMenu(false);
+    setShowFormattingToolbar(false);
 
     // textarea 높이 초기화
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
+    }
+  };
+
+  // 음성 메시지 전송
+  const handleVoiceSend = async (voiceMessage: VoiceMessage) => {
+    // 음성 메시지를 텍스트 메시지로 표시 (실제로는 오디오 파일 업로드 필요)
+    await sendMessage(
+      `🎤 음성 메시지 (${Math.floor(voiceMessage.duration)}초)`,
+      'text',
+      [],
+      uiState.replyingTo?.id
+    );
+    setIsRecordingVoice(false);
+  };
+
+  // 포맷 적용
+  const applyFormat = (format: MarkdownFormat) => {
+    if (!textareaRef.current) return;
+
+    const start = textareaRef.current.selectionStart;
+    const end = textareaRef.current.selectionEnd;
+
+    if (start !== end) {
+      const result = markdownPlugin.toggleFormat(message, format, start, end);
+      setMessage(result.newText);
+
+      // 선택 영역 복원
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.selectionStart = result.newStart;
+          textareaRef.current.selectionEnd = result.newEnd;
+          textareaRef.current.focus();
+        }
+      }, 0);
     }
   };
 
@@ -128,23 +187,7 @@ const ChatInput: React.FC = () => {
 
       if (format && textareaRef.current) {
         e.preventDefault();
-        const start = textareaRef.current.selectionStart;
-        const end = textareaRef.current.selectionEnd;
-
-        if (start !== end) {
-          // 텍스트가 선택된 경우
-          const result = markdownPlugin.toggleFormat(message, format, start, end);
-          setMessage(result.newText);
-
-          // 선택 영역 복원
-          setTimeout(() => {
-            if (textareaRef.current) {
-              textareaRef.current.selectionStart = result.newStart;
-              textareaRef.current.selectionEnd = result.newEnd;
-              textareaRef.current.focus();
-            }
-          }, 0);
-        }
+        applyFormat(format);
         return;
       }
     }
@@ -274,6 +317,27 @@ const ChatInput: React.FC = () => {
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
   };
 
+  // 포맷 버튼 목록
+  const formatButtons: Array<{ format: MarkdownFormat; icon: React.ReactNode; label: string; shortcut: string }> = [
+    { format: 'bold', icon: <FiBold className="w-4 h-4" />, label: '굵게', shortcut: 'Ctrl+B' },
+    { format: 'italic', icon: <FiItalic className="w-4 h-4" />, label: '기울임', shortcut: 'Ctrl+I' },
+    { format: 'underline', icon: <FiUnderline className="w-4 h-4" />, label: '밑줄', shortcut: 'Ctrl+U' },
+    { format: 'strikethrough', icon: <TbStrikethrough className="w-4 h-4" />, label: '취소선', shortcut: 'Ctrl+Shift+X' },
+    { format: 'code', icon: <FiCode className="w-4 h-4" />, label: '코드', shortcut: 'Ctrl+E' },
+  ];
+
+  // 음성 녹음 중이면 VoiceRecorder 표시
+  if (isRecordingVoice) {
+    return (
+      <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+        <VoiceRecorder
+          onSend={handleVoiceSend}
+          onCancel={() => setIsRecordingVoice(false)}
+        />
+      </div>
+    );
+  }
+
   return (
     <div
       ref={dropZoneRef}
@@ -368,6 +432,32 @@ const ChatInput: React.FC = () => {
         />
       )}
 
+      {/* 포맷팅 툴바 */}
+      {showFormattingToolbar && (
+        <div className="mb-3 flex items-center gap-1 p-2 bg-gray-100 dark:bg-gray-700 rounded-lg">
+          {formatButtons.map(({ format, icon, label, shortcut }) => (
+            <button
+              key={format}
+              onClick={() => applyFormat(format)}
+              disabled={!hasTextSelection}
+              className={`p-2 rounded transition-colors ${
+                hasTextSelection
+                  ? 'hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300'
+                  : 'text-gray-400 dark:text-gray-500 cursor-not-allowed'
+              }`}
+              title={`${label} (${shortcut})`}
+            >
+              {icon}
+            </button>
+          ))}
+          <div className="border-l border-gray-300 dark:border-gray-600 ml-2 pl-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {hasTextSelection ? '선택한 텍스트에 적용' : '텍스트를 선택하세요'}
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* 입력 영역 */}
       <div className="flex items-end gap-2">
         {/* 첨부 버튼 */}
@@ -375,6 +465,7 @@ const ChatInput: React.FC = () => {
           <button
             onClick={() => setShowAttachmentMenu(!showAttachmentMenu)}
             className="p-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
+            title="파일 첨부"
           >
             <FiPaperclip className="w-5 h-5" />
           </button>
@@ -415,6 +506,19 @@ const ChatInput: React.FC = () => {
           />
         </div>
 
+        {/* 포맷팅 툴바 토글 */}
+        <button
+          onClick={() => setShowFormattingToolbar(!showFormattingToolbar)}
+          className={`p-2.5 rounded-full transition-colors ${
+            showFormattingToolbar
+              ? 'bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400'
+              : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400'
+          }`}
+          title="텍스트 포맷팅"
+        >
+          <FiBold className="w-5 h-5" />
+        </button>
+
         {/* 텍스트 입력 */}
         <div className="flex-1 relative">
           <textarea
@@ -422,7 +526,9 @@ const ChatInput: React.FC = () => {
             value={message}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
-            placeholder="메시지를 입력하세요..."
+            onSelect={handleSelect}
+            onMouseUp={handleSelect}
+            placeholder="메시지를 입력하세요... (@멘션, **굵게**, *기울임*)"
             rows={1}
             className="w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-700 border-0 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
             style={{ maxHeight: '150px' }}
@@ -434,6 +540,7 @@ const ChatInput: React.FC = () => {
           <button
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             className="p-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
+            title="이모지"
           >
             <FiSmile className="w-5 h-5" />
           </button>
@@ -455,6 +562,15 @@ const ChatInput: React.FC = () => {
           )}
         </div>
 
+        {/* 음성 메시지 버튼 */}
+        <button
+          onClick={() => setIsRecordingVoice(true)}
+          className="p-2.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
+          title="음성 메시지"
+        >
+          <FiMic className="w-5 h-5" />
+        </button>
+
         {/* 전송 버튼 */}
         <button
           onClick={handleSend}
@@ -464,15 +580,19 @@ const ChatInput: React.FC = () => {
               ? 'bg-primary-600 hover:bg-primary-700 text-white'
               : 'bg-gray-100 dark:bg-gray-700 text-gray-400'
           } disabled:opacity-50`}
+          title="전송 (Enter)"
         >
           <FiSend className="w-5 h-5" />
         </button>
       </div>
 
       {/* 안내 텍스트 */}
-      <p className="mt-2 text-xs text-gray-400 dark:text-gray-500 text-center">
-        Enter로 전송, Shift+Enter로 줄바꿈
-      </p>
+      <div className="mt-2 flex items-center justify-center gap-4 text-xs text-gray-400 dark:text-gray-500">
+        <span>Enter 전송</span>
+        <span>Shift+Enter 줄바꿈</span>
+        <span>Ctrl+B 굵게</span>
+        <span>@ 멘션</span>
+      </div>
     </div>
   );
 };

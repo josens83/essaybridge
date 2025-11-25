@@ -123,6 +123,15 @@ class PresencePlugin {
   }
 
   /**
+   * 내 현재 상태 가져오기
+   */
+  getMyStatus(): UserStatus {
+    if (!this.currentUserId) return 'offline';
+    const presence = this.presences.get(this.currentUserId);
+    return presence?.status || 'offline';
+  }
+
+  /**
    * 모든 상태 가져오기
    */
   getAllPresences(): UserPresence[] {

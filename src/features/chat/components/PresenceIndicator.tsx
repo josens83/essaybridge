@@ -7,9 +7,10 @@ import React from 'react';
 import type { UserStatus } from '../plugins/PresencePlugin';
 
 interface PresenceIndicatorProps {
-  status: UserStatus;
+  status: UserStatus | 'online' | 'away' | 'busy' | 'offline';
   size?: 'sm' | 'md' | 'lg';
   showLabel?: boolean;
+  showBorder?: boolean;
   className?: string;
 }
 
@@ -17,6 +18,7 @@ const PresenceIndicator: React.FC<PresenceIndicatorProps> = ({
   status,
   size = 'md',
   showLabel = false,
+  showBorder = false,
   className = '',
 }) => {
   const sizeClasses = {
@@ -61,7 +63,7 @@ const PresenceIndicator: React.FC<PresenceIndicatorProps> = ({
 
   return (
     <div
-      className={`${sizeClasses[size]} ${config.color} rounded-full ring-2 ${config.ring} ${className}`}
+      className={`${sizeClasses[size]} ${config.color} rounded-full ${showBorder ? 'ring-2 ring-white dark:ring-gray-800' : `ring-2 ${config.ring}`} ${className}`}
       title={config.label}
     />
   );
