@@ -1,6 +1,6 @@
 /**
  * ChatBubble Component
- * 메시지 버블 컴포넌트 - 텍스트, 파일, 시스템 메시지 지원
+ * 메시지 버블 컴포넌트 - 텍스트, 파일, 시스템 메시지, 스레드 지원
  */
 
 import React, { useState } from 'react';
@@ -17,6 +17,7 @@ import {
   FiFile,
   FiDownload,
   FiAlertCircle,
+  FiMessageSquare,
 } from 'react-icons/fi';
 import type { ChatMessage } from '../types';
 import { useChat } from '../hooks/useChatContext';
@@ -24,17 +25,20 @@ import { useAuth } from '../../auth';
 import ImageLightbox from './ImageLightbox';
 import LinkPreview, { extractUrls } from './LinkPreview';
 import FormattedText from '../plugins/FormattedText';
+import { threadPlugin } from '../plugins/ThreadPlugin';
 
 interface ChatBubbleProps {
   message: ChatMessage;
   showAvatar?: boolean;
   isGrouped?: boolean;
+  onStartThread?: (message: ChatMessage) => void;
 }
 
 const ChatBubble: React.FC<ChatBubbleProps> = ({
   message,
   showAvatar = true,
   isGrouped = false,
+  onStartThread,
 }) => {
   const { user } = useAuth();
   const {
@@ -54,6 +58,11 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
   const isOwnMessage = message.senderId === currentUserId;
   const isSystemMessage = message.type === 'system';
 
+  // 스레드 정보
+  const threadReplyCount = threadPlugin.getReplyCount(message.id);
+  const threadLastReply = threadPlugin.getLastReplyTime(message.id);
+  const hasThread = threadReplyCount > 0;
+
   // 시간 포맷
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
@@ -65,6 +74,20 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
     if (bytes < 1024) return bytes + ' B';
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  };
+
+  // 상대적 시간 포맷
+  const formatRelativeTime = (date: Date) => {
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (minutes < 1) return '방금 전';
+    if (minutes < 60) return `${minutes}분 전`;
+    if (hours < 24) return `${hours}시간 전`;
+    return `${days}일 전`;
   };
 
   // 상태 아이콘
@@ -82,6 +105,13 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
         return <FiAlertCircle className="w-3 h-3 text-red-500" />;
       default:
         return null;
+    }
+  };
+
+  // 스레드 시작/열기
+  const handleThreadClick = () => {
+    if (onStartThread) {
+      onStartThread(message);
     }
   };
 
@@ -239,6 +269,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
             <button
               onClick={() => setShowReactionPicker(!showReactionPicker)}
               className="p-1.5 rounded-full bg-white dark:bg-gray-700 shadow-sm hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300"
+              title="이모지 반응"
             >
               😊
             </button>
@@ -247,15 +278,28 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
             <button
               onClick={() => setReplyingTo(message)}
               className="p-1.5 rounded-full bg-white dark:bg-gray-700 shadow-sm hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300"
+              title="답장"
             >
               <FiCornerUpLeft className="w-4 h-4" />
             </button>
+
+            {/* 스레드 시작/열기 */}
+            {onStartThread && (
+              <button
+                onClick={handleThreadClick}
+                className="p-1.5 rounded-full bg-white dark:bg-gray-700 shadow-sm hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300"
+                title={hasThread ? '스레드 열기' : '스레드 시작'}
+              >
+                <FiMessageSquare className="w-4 h-4" />
+              </button>
+            )}
 
             {/* 더보기 메뉴 */}
             <div className="relative">
               <button
                 onClick={() => setShowMenu(!showMenu)}
                 className="p-1.5 rounded-full bg-white dark:bg-gray-700 shadow-sm hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300"
+                title="더보기"
               >
                 <FiMoreVertical className="w-4 h-4" />
               </button>
@@ -282,6 +326,17 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
                   >
                     <FiBookmark className="w-4 h-4" /> {message.isPinned ? '핀 해제' : '핀 고정'}
                   </button>
+                  {onStartThread && (
+                    <button
+                      onClick={() => {
+                        handleThreadClick();
+                        setShowMenu(false);
+                      }}
+                      className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2"
+                    >
+                      <FiMessageSquare className="w-4 h-4" /> {hasThread ? '스레드 열기' : '스레드 시작'}
+                    </button>
+                  )}
                   {isOwnMessage && (
                     <>
                       <button
@@ -336,6 +391,26 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
             </div>
           )}
         </div>
+
+        {/* 스레드 답글 표시 */}
+        {hasThread && (
+          <button
+            onClick={handleThreadClick}
+            className={`flex items-center gap-2 mt-2 px-3 py-1.5 rounded-lg text-xs transition-colors ${
+              isOwnMessage
+                ? 'bg-primary-500/30 hover:bg-primary-500/40 text-primary-100'
+                : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-400'
+            }`}
+          >
+            <FiMessageSquare className="w-3.5 h-3.5" />
+            <span className="font-medium">{threadReplyCount}개의 답글</span>
+            {threadLastReply && (
+              <span className="text-gray-500 dark:text-gray-400">
+                · {formatRelativeTime(threadLastReply)}
+              </span>
+            )}
+          </button>
+        )}
 
         {/* 리액션 표시 */}
         {message.reactions && message.reactions.length > 0 && (
