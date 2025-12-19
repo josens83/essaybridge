@@ -171,7 +171,8 @@ class VoiceMessagePlugin {
   private async generateWaveform(audioBlob: Blob): Promise<number[]> {
     try {
       const arrayBuffer = await audioBlob.arrayBuffer();
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const audioContext = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
       const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
 
       const rawData = audioBuffer.getChannelData(0);
@@ -223,7 +224,7 @@ class VoiceMessagePlugin {
     try {
       const result = await navigator.permissions.query({ name: 'microphone' as PermissionName });
       return result.state === 'granted';
-    } catch (error) {
+    } catch {
       // permissions API를 지원하지 않는 브라우저
       return true;
     }

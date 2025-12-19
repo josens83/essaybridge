@@ -2,6 +2,7 @@
  * LinkPreview Component
  * 메시지 내 URL을 감지하고 프리뷰 카드를 표시
  */
+/* eslint-disable react-refresh/only-export-components */
 
 import React, { useState, useEffect } from 'react';
 import { FiExternalLink, FiGlobe } from 'react-icons/fi';

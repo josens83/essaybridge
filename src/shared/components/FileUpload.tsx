@@ -60,9 +60,11 @@ const FileUpload = ({
 
     for (const file of filesArray) {
       const error = validateFile(file);
+      // eslint-disable-next-line react-hooks/purity
+      const fileId = `${file.name}-${Date.now()}-${Math.random()}`;
       const uploadedFile: UploadedFile = {
         file,
-        id: `${file.name}-${Date.now()}-${Math.random()}`,
+        id: fileId,
         status: error ? 'error' : 'uploading',
         progress: 0,
         error: error || undefined,

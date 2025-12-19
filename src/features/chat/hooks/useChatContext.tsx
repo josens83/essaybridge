@@ -2,6 +2,7 @@
  * Chat Context & Provider
  * 채팅 상태를 전역으로 관리하는 Context
  */
+/* eslint-disable react-refresh/only-export-components */
 
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import type {
@@ -122,6 +123,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     if (!selectedRoomId) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMessages([]);
       return;
     }
@@ -135,12 +137,25 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setHasMoreMessages(roomMessages.length >= 20);
       setIsLoading(false);
 
-      // 메시지 읽음 처리
-      markAsRead();
+      // 메시지 읽음 처리 - 인라인으로 구현
+      const unreadIds = roomMessages
+        .filter((m: ChatMessage) => !m.readBy.includes(currentUserId))
+        .map((m: ChatMessage) => m.id);
+
+      if (unreadIds.length > 0) {
+        setMessages(prev => prev.map(msg =>
+          unreadIds.includes(msg.id) && !msg.readBy.includes(currentUserId)
+            ? { ...msg, readBy: [...msg.readBy, currentUserId], status: 'read' as const }
+            : msg
+        ));
+        setRooms(prev => prev.map(room =>
+          room.id === selectedRoomId ? { ...room, unreadCount: 0 } : room
+        ));
+      }
     };
 
     loadMessages();
-  }, [selectedRoomId]);
+  }, [selectedRoomId, currentUserId]);
 
   // ============ 채팅방 선택 ============
 
@@ -450,19 +465,24 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // ============ 타이핑 상태 ============
 
+  const clearTypingTimeout = useCallback(() => {
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+      typingTimeoutRef.current = null;
+    }
+  }, []);
+
   const setTyping = useCallback((isTyping: boolean) => {
     // 실제로는 WebSocket으로 전송
     // 여기선 타이머로 자동 해제
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-    }
+    clearTypingTimeout();
 
     if (isTyping) {
       typingTimeoutRef.current = setTimeout(() => {
-        setTyping(false);
+        clearTypingTimeout();
       }, 3000);
     }
-  }, []);
+  }, [clearTypingTimeout]);
 
   // ============ UI 상태 함수들 ============
 
