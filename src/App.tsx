@@ -5,9 +5,13 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import { ErrorBoundary } from './shared/components';
 import Layout from './components/layout/Layout';
 
-// Public Pages
-import Home from './pages/Home';
-import Pricing from './pages/Pricing';
+// Marketing Feature (Public Pages)
+import {
+  HomePage as Home,
+  PricingPage as Pricing,
+  NotFoundPage as NotFound,
+  SearchPage as Search
+} from './features/marketing';
 
 // Auth Feature
 import { LoginPage as Login, RegisterPage as Register } from './features/auth';
@@ -17,16 +21,18 @@ import {
   StudentDashboard as Dashboard,
   AdminDashboard,
   ExpertDashboard,
-  ConsultantDashboard
+  ConsultantDashboard,
+  TutorDashboardPage as TutorDashboard,
+  AnalyticsPage as Analytics
 } from './features/dashboard';
 
 // Payment Feature
 import {
   PaymentPage as Payment,
-  CheckoutPage as Checkout
+  CheckoutPage as Checkout,
+  PaymentSuccessPage as PaymentSuccess,
+  PaymentHistoryPage as PaymentHistory
 } from './features/payment';
-import PaymentSuccess from './pages/PaymentSuccess';
-import PaymentHistory from './pages/PaymentHistory';
 
 // Courses Feature
 import { CoursesPage as Courses, CourseDetailPage as CourseDetail } from './features/courses';
@@ -44,19 +50,20 @@ import { ConsultingPage as Consulting } from './features/consulting';
 // Chat Feature
 import { ChatPage as Chat, GlobalChatProvider } from './features/chat';
 
-// Other Pages
-import Community from './pages/Community';
-import PostDetail from './pages/PostDetail';
-import Profile from './pages/Profile';
-import Search from './pages/Search';
-import TutorDashboard from './pages/TutorDashboard';
-import Analytics from './pages/Analytics';
-import FAQ from './pages/FAQ';
-import Terms from './pages/Terms';
-import Privacy from './pages/Privacy';
-import Guide from './pages/Guide';
-import Notice from './pages/Notice';
-import NotFound from './pages/NotFound';
+// Community Feature
+import { CommunityPage as Community, PostDetailPage as PostDetail } from './features/community';
+
+// Profile Feature
+import { ProfilePage as Profile } from './features/profile';
+
+// Legal Feature
+import {
+  FAQPage as FAQ,
+  TermsPage as Terms,
+  PrivacyPage as Privacy,
+  GuidePage as Guide,
+  NoticePage as Notice
+} from './features/legal';
 
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
