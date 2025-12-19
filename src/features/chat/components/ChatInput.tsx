@@ -67,6 +67,7 @@ const ChatInput: React.FC = () => {
       textareaRef.current?.focus();
     }
     if (uiState.editingMessage) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMessage(uiState.editingMessage.content);
     }
   }, [uiState.replyingTo, uiState.editingMessage]);

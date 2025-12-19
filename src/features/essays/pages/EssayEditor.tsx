@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FiSave, FiSend, FiAlertCircle } from 'react-icons/fi';
 import { universities, departments } from '../../../data/sampleData';
@@ -21,6 +21,25 @@ const EssayEditor = () => {
   const [saving, setSaving] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = useCallback(async (autoSave = false) => {
+    if (!autoSave) setSaving(true);
+
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    if (!autoSave) {
+      setSaving(false);
+      alert('임시 저장되었습니다.');
+    }
+  }, []);
+
   useEffect(() => {
     // Auto-save every 30 seconds
     const autoSave = setInterval(() => {
@@ -30,7 +49,7 @@ const EssayEditor = () => {
     }, 30000);
 
     return () => clearInterval(autoSave);
-  }, [formData]);
+  }, [formData, handleSave]);
 
   useEffect(() => {
     // Count words (Korean characters + spaces)
@@ -65,25 +84,6 @@ const EssayEditor = () => {
       });
     }
   }, [id, isEditing]);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSave = async (autoSave = false) => {
-    if (!autoSave) setSaving(true);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    if (!autoSave) {
-      setSaving(false);
-      alert('임시 저장되었습니다.');
-    }
-  };
 
   const handleSubmit = async () => {
     if (!formData.title || !formData.university || !formData.department || !formData.content) {

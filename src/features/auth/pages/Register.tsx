@@ -47,7 +47,7 @@ const Register = () => {
     try {
       await register(formData.email, formData.password, formData.name, formData.role);
       navigate('/dashboard');
-    } catch (err) {
+    } catch {
       setError('회원가입에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setLoading(false);

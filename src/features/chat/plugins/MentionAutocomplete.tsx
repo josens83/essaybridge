@@ -66,6 +66,7 @@ const MentionAutocomplete: React.FC<MentionAutocompleteProps> = ({
 
   // 검색어 변경 시 선택 인덱스 초기화
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedIndex(0);
   }, [searchText]);
 

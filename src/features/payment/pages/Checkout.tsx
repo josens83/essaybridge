@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FiCreditCard, FiCheck, FiLock } from 'react-icons/fi';
 import { useAuth } from '../../auth';
@@ -20,6 +20,12 @@ const Checkout = () => {
     email: user?.email || '',
     phone: '',
   });
+
+  // 다음 결제일 미리 계산 (렌더링 중 Date.now 호출 방지)
+  const nextPaymentDate = useMemo(() => {
+    const days = plan?.period === 'monthly' ? 30 : 365;
+    return new Date(Date.now() + days * 24 * 60 * 60 * 1000).toLocaleDateString();
+  }, [plan?.period]);
 
   if (!plan) {
     return (
@@ -304,10 +310,7 @@ const Checkout = () => {
                 <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                   <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
                     <p className="text-xs text-gray-600 dark:text-gray-300">
-                      다음 결제 예정일:{' '}
-                      {new Date(
-                        Date.now() + (plan.period === 'monthly' ? 30 : 365) * 24 * 60 * 60 * 1000
-                      ).toLocaleDateString()}
+                      다음 결제 예정일: {nextPaymentDate}
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       언제든지 구독을 취소할 수 있습니다.

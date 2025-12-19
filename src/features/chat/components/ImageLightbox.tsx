@@ -44,8 +44,10 @@ const ImageLightbox: React.FC<ImageLightboxProps> = ({
   // 컴포넌트가 열릴 때 상태 초기화
   useEffect(() => {
     if (isOpen) {
+      /* eslint-disable react-hooks/set-state-in-effect */
       setScale(1);
       setRotation(0);
+      /* eslint-enable react-hooks/set-state-in-effect */
     }
   }, [isOpen, imageUrl]);
 

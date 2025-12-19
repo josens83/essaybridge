@@ -2,6 +2,7 @@
  * Authentication Context with Real API Integration
  * Replaces mock authentication with actual API calls
  */
+/* eslint-disable react-refresh/only-export-components */
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import type { User, UserRole } from '../../shared/types';
@@ -52,7 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Fetch current user profile
         const currentUser = await authService.getCurrentUser();
         setUser(currentUser);
-      } catch (err) {
+      } catch {
         // Token invalid or expired
         tokenStorage.clearTokens();
       } finally {

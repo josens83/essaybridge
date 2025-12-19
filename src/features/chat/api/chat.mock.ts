@@ -509,7 +509,9 @@ export const generateId = () => `${Date.now()}-${Math.random().toString(36).subs
 /**
  * 자동 응답 메시지 생성 (시뮬레이션용)
  */
-export const generateAutoResponse = (roomId: string, _userMessage: string): ChatMessage | null => {
+export const generateAutoResponse = (roomId: string, _userMessage?: string): ChatMessage | null => {
+  // _userMessage can be used for context-aware responses in the future
+  void _userMessage;
   const room = mockChatRooms.find(r => r.id === roomId);
   if (!room) return null;
 

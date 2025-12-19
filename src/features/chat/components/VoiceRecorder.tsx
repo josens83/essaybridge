@@ -3,7 +3,7 @@
  * 음성 메시지 녹음 UI
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FiMic, FiSquare, FiPause, FiPlay, FiX, FiSend } from 'react-icons/fi';
 import { voiceMessagePlugin, type VoiceMessage, type RecordingState } from '../plugins/VoiceMessagePlugin';
 
@@ -19,6 +19,12 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSend, onCancel }) => {
     isPaused: false,
   });
   const [voiceData, setVoiceData] = useState<VoiceMessage | null>(null);
+
+  // 파형 높이 미리 계산 (렌더링 중 Math.random 호출 방지)
+  const waveformHeightsRef = useRef<number[]>(
+    Array.from({ length: 30 }, () => Math.random() * 100)
+  );
+  const waveformHeights = waveformHeightsRef.current;
 
   useEffect(() => {
     // 녹음 시작
@@ -132,14 +138,14 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSend, onCancel }) => {
       <div className="flex-1">
         {/* 실시간 파형 애니메이션 */}
         <div className="flex items-center gap-1 h-8">
-          {[...Array(30)].map((_, i) => (
+          {waveformHeights.map((height, i) => (
             <div
               key={i}
               className={`flex-1 bg-red-500 rounded-full transition-all ${
                 state.isPaused ? '' : 'animate-pulse'
               }`}
               style={{
-                height: `${Math.random() * 100}%`,
+                height: `${height}%`,
                 animationDelay: `${i * 0.05}s`,
               }}
             />

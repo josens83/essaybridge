@@ -2,6 +2,7 @@
  * Global Chat Context
  * 앱 전역에서 채팅 unread count를 사용할 수 있게 하는 간단한 Context
  */
+/* eslint-disable react-refresh/only-export-components */
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { mockChatRooms } from '../api/chat.mock';
@@ -23,6 +24,7 @@ export const GlobalChatProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     refreshUnreadCount();
 
     // 실제로는 WebSocket이나 polling으로 주기적 업데이트

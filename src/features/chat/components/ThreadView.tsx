@@ -25,6 +25,7 @@ const ThreadView: React.FC<ThreadViewProps> = ({ thread, onClose, onSendReply })
     // 스레드 업데이트 감지
     const updatedThread = threadPlugin.getThread(thread.parentMessageId);
     if (updatedThread) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setReplies(updatedThread.replies);
     }
   }, [thread.parentMessageId]);

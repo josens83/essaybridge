@@ -3,7 +3,7 @@
  * 메시지 버블 컴포넌트 - 텍스트, 파일, 시스템 메시지, 스레드 지원
  */
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   FiCheck,
   FiCheckCircle,
@@ -91,7 +91,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
   };
 
   // 상태 아이콘
-  const StatusIcon = () => {
+  const statusIcon = useMemo(() => {
     switch (message.status) {
       case 'sending':
         return <FiClock className="w-3 h-3 text-gray-400" />;
@@ -106,7 +106,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
       default:
         return null;
     }
-  };
+  }, [message.status]);
 
   // 스레드 시작/열기
   const handleThreadClick = () => {
@@ -444,7 +444,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
           <span className="text-xs text-gray-400 dark:text-gray-500">
             {formatTime(message.createdAt)}
           </span>
-          {isOwnMessage && <StatusIcon />}
+          {isOwnMessage && statusIcon}
 
           {/* 읽음 상태 - 읽은 사람 아바타 표시 */}
           {isOwnMessage && message.readBy && message.readBy.length > 1 && (

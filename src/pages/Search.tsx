@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { FiSearch, FiFileText, FiBook, FiMessageSquare } from 'react-icons/fi';
 import { sampleCourses, samplePosts } from '../data/sampleData';
@@ -69,22 +69,7 @@ const Search = () => {
     },
   ];
 
-  useEffect(() => {
-    const q = searchParams.get('q');
-    const cat = searchParams.get('category');
-    if (q) setQuery(q);
-    if (cat) setCategory(cat as SearchCategory);
-  }, [searchParams]);
-
-  useEffect(() => {
-    if (query.trim()) {
-      performSearch();
-    } else {
-      setResults([]);
-    }
-  }, [query, category]);
-
-  const performSearch = () => {
+  const performSearch = useCallback(() => {
     setIsSearching(true);
     const searchQuery = query.toLowerCase();
     const foundResults: SearchResult[] = [];
@@ -155,7 +140,22 @@ const Search = () => {
 
     setResults(foundResults);
     setIsSearching(false);
-  };
+  }, [query, category, mockEssays]);
+
+  useEffect(() => {
+    const q = searchParams.get('q');
+    const cat = searchParams.get('category');
+    if (q) setQuery(q);
+    if (cat) setCategory(cat as SearchCategory);
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (query.trim()) {
+      performSearch();
+    } else {
+      setResults([]);
+    }
+  }, [query, category, performSearch]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

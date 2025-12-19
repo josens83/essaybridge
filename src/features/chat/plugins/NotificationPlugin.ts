@@ -171,7 +171,8 @@ class NotificationPlugin {
    */
   private initializeAudio(): void {
     try {
-      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       if (AudioContextClass) {
         this.audioContext = new AudioContextClass();
       }

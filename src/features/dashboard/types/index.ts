@@ -16,7 +16,7 @@ export interface StudentDashboard {
   };
   upcomingConsultations: ConsultingSession[];
   enrolledCourses: CourseEnrollment[];
-  recentPosts: any[]; // Post type from community feature (to be created)
+  recentPosts: unknown[]; // Post type from community feature (to be created)
 }
 
 export interface ExpertStats {

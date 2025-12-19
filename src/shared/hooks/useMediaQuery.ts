@@ -26,6 +26,7 @@ export function useMediaQuery(query: string): boolean {
     };
 
     // Set initial value
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMatches(mediaQuery.matches);
 
     // Listen for changes

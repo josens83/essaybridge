@@ -19,5 +19,12 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      // 일반적인 React 패턴 허용 - 너무 엄격한 규칙 완화
+      'react-hooks/purity': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/immutability': 'warn',
+      'react-hooks/static-components': 'off',
+    },
   },
 ])
